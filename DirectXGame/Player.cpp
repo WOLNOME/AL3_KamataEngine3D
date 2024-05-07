@@ -1,118 +1,9 @@
 #include "Player.h"
 #include "ImGuiManager.h"
 #include <cassert>
+#include "Function.h"
 
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 c;
-	c.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
-	c.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
-	c.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
-	c.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
-	c.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
-	c.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
-	c.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
-	c.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
-	c.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
-	c.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
-	c.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
-	c.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
-	c.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
-	c.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
-	c.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
-	c.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
-	return c;
-}
 
-// アフィン変換関数
-Matrix4x4 MakeRotateXMatrix(float radian) {
-	Matrix4x4 c;
-	c.m[0][0] = 1;
-	c.m[0][1] = 0;
-	c.m[0][2] = 0;
-	c.m[0][3] = 0;
-	c.m[1][0] = 0;
-	c.m[1][1] = std::cos(radian);
-	c.m[1][2] = std::sin(radian);
-	c.m[1][3] = 0;
-	c.m[2][0] = 0;
-	c.m[2][1] = -std::sin(radian);
-	c.m[2][2] = std::cos(radian);
-	c.m[2][3] = 0;
-	c.m[3][0] = 0;
-	c.m[3][1] = 0;
-	c.m[3][2] = 0;
-	c.m[3][3] = 1;
-	return c;
-}
-
-Matrix4x4 MakeRotateYMatrix(float radian) {
-	Matrix4x4 c;
-	c.m[0][0] = std::cos(radian);
-	c.m[0][1] = 0;
-	c.m[0][2] = -std::sin(radian);
-	c.m[0][3] = 0;
-	c.m[1][0] = 0;
-	c.m[1][1] = 1;
-	c.m[1][2] = 0;
-	c.m[1][3] = 0;
-	c.m[2][0] = std::sin(radian);
-	c.m[2][1] = 0;
-	c.m[2][2] = std::cos(radian);
-	c.m[2][3] = 0;
-	c.m[3][0] = 0;
-	c.m[3][1] = 0;
-	c.m[3][2] = 0;
-	c.m[3][3] = 1;
-	return c;
-}
-
-Matrix4x4 MakeRotateZMatrix(float radian) {
-	Matrix4x4 c;
-	c.m[0][0] = std::cos(radian);
-	c.m[0][1] = std::sin(radian);
-	c.m[0][2] = 0;
-	c.m[0][3] = 0;
-	c.m[1][0] = -std::sin(radian);
-	c.m[1][1] = std::cos(radian);
-	c.m[1][2] = 0;
-	c.m[1][3] = 0;
-	c.m[2][0] = 0;
-	c.m[2][1] = 0;
-	c.m[2][2] = 1;
-	c.m[2][3] = 0;
-	c.m[3][0] = 0;
-	c.m[3][1] = 0;
-	c.m[3][2] = 0;
-	c.m[3][3] = 1;
-	return c;
-}
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
-	Matrix4x4 c;
-	// 回転行列統合
-	Matrix4x4 rx = MakeRotateXMatrix(rotate.x);
-	Matrix4x4 ry = MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rz = MakeRotateZMatrix(rotate.z);
-	Matrix4x4 rxyz = Multiply(rx, Multiply(ry, rz));
-
-	c.m[0][0] = scale.x * rxyz.m[0][0];
-	c.m[0][1] = scale.x * rxyz.m[0][1];
-	c.m[0][2] = scale.x * rxyz.m[0][2];
-	c.m[0][3] = 0;
-	c.m[1][0] = scale.y * rxyz.m[1][0];
-	c.m[1][1] = scale.y * rxyz.m[1][1];
-	c.m[1][2] = scale.y * rxyz.m[1][2];
-	c.m[1][3] = 0;
-	c.m[2][0] = scale.z * rxyz.m[2][0];
-	c.m[2][1] = scale.z * rxyz.m[2][1];
-	c.m[2][2] = scale.z * rxyz.m[2][2];
-	c.m[2][3] = 0;
-	c.m[3][0] = translate.x;
-	c.m[3][1] = translate.y;
-	c.m[3][2] = translate.z;
-	c.m[3][3] = 1;
-
-	return c;
-}
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -128,6 +19,17 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 void Player::Update() {
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
+
+	///旋回処理
+	// 回転速さ
+	const float kRotSpeed = 0.02f;
+	// 押した方向で移動ベクトルを変更
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 
@@ -153,6 +55,7 @@ void Player::Update() {
 	worldTransform_.translation_.y += move.y;
 	worldTransform_.translation_.z += move.z;
 
+
 	// 移動限界座標
 	const float kMoveLimitX = 33.0f;
 	const float kMoveLimitY = 17.0f;
@@ -162,6 +65,15 @@ void Player::Update() {
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+
+	//攻撃処理
+	Attack();
+
+	//弾更新
+	if (bullet_) {
+		bullet_->Update();
+	}
+
 
 	// アフィン変換行列の作成
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
@@ -186,4 +98,23 @@ void Player::Update() {
 	ImGui::End();
 }
 
-void Player::Draw(ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
+void Player::Draw(ViewProjection& viewProjection) { 
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	
+	//弾描画
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
+}
+
+void Player::Attack() { 
+	//a
+	if (input_->PushKey(DIK_SPACE)) {
+		//弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		//弾を登録する
+		bullet_ = newBullet;
+	}
+}
