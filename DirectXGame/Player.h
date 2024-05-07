@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include <list>
 
 /// <summary>
 /// 自キャラ
@@ -12,6 +13,8 @@
 
 class Player {
 public:
+
+	~Player();
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -45,7 +48,6 @@ private:
 	//デバッグテキスト
 	float inputFloat3[3] = {0,0,0};
 	//弾
-	PlayerBullet* bullet_ = nullptr;
-
+	std::list<PlayerBullet*> bullets_;
 
 };
