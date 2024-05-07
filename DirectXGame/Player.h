@@ -33,6 +33,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	//キーボード入力
 	Input* input_ = nullptr;
-	
+	//デバッグテキスト
+	float inputFloat3[3] = {0,0,0};
 	
 };
