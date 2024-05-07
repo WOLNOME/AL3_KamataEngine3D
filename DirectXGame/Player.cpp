@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
@@ -159,7 +160,16 @@ void Player::Update() {
 	worldTransform_.TransferMatrix();
 
 	//キャラクターの座標を画面表示する処理
-	
+	// デバッグテキストの表示
+	ImGui::Begin("Debug1");
+	/*ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);*/
+	// float3入力ボックス
+	ImGui::InputFloat3("InputFloat3", inputFloat3);
+	// float3スライダー
+	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f);
+	ImGui::End();
+	// デモウィンドウの表示を有効化
+	ImGui::ShowDemoWindow();
 
 }
 
