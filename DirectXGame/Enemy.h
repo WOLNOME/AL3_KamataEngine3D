@@ -24,6 +24,12 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+	
+	//接近フェーズの更新関数
+	void ApproachUpdate();
+
+	//離脱フェーズの更新関数
+	void LeaveUpdate();
 
 private:
 	// ワールド変換データ
@@ -37,5 +43,7 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
-
+	//メンバ関数ポインタのテーブル
+	static void (Enemy::*spFuncTable[])();
+	
 };
