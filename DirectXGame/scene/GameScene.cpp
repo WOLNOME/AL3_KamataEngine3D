@@ -1,11 +1,13 @@
 #include "GameScene.h"
-#include "TextureManager.h"
 #include "AxisIndicator.h"
+#include "TextureManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
+	delete player_;
+	delete enemy_;
 	delete model_;
 	delete debugCamera_;
 }
@@ -16,30 +18,35 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	//ファイル名を指定してテクスチャを読み込む
+	// ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("mario.jpg");
-	//3Dモデルの生成
+	// 3Dモデルの生成
 	model_ = Model::Create();
-	//ビュープロジェクションの初期化
+	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
-	//自キャラの生成
+	// 自キャラの生成
 	player_ = new Player();
-	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
-	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
-	//軸方向表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
-	//軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+	// 敵キャラの生成
+	enemy_ = new Enemy();
+	// 自キャラの初期化
+	player_->Initialize(model_, textureHandle_);
+	// 敵キャラの初期化
+	enemy_->Initialize(model_, {0.0f, 4.0f, 160.0f});
 
+	// デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
+	// 軸方向表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
-	//自キャラの更新
+	// 自キャラの更新
 	player_->Update();
-	
-	
+	// 敵キャラの更新
+	enemy_->Update();
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_TAB)) {
 		if (isDebugCameraActive_) {
@@ -49,18 +56,17 @@ void GameScene::Update() {
 		}
 	}
 #endif // _DEBUG
-	//カメラの処理
+	// カメラの処理
 	if (isDebugCameraActive_) {
 		// デバッグカメラの更新
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		//ビュープロジェクション行列の転送
+		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 
-
 	} else {
-		//ビュープロジェクション行列の更新と転送
+		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
 }
@@ -91,9 +97,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
-	//自キャラの描画
+
+	// 自キャラの描画
 	player_->Draw(viewProjection_);
+	// 敵キャラの描画
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
