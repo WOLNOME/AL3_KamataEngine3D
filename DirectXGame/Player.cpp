@@ -1,12 +1,10 @@
 #include "Player.h"
+#include "Function.h"
 #include "ImGuiManager.h"
 #include <cassert>
-#include "Function.h"
-
-
 
 Player::~Player() {
-	//解放
+	// 解放
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
@@ -20,14 +18,22 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
-
 }
 
 void Player::Update() {
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 
-	///旋回処理
+	/// 旋回処理
 	// 回転速さ
 	const float kRotSpeed = 0.02f;
 	// 押した方向で移動ベクトルを変更
@@ -62,7 +68,6 @@ void Player::Update() {
 	worldTransform_.translation_.y += move.y;
 	worldTransform_.translation_.z += move.z;
 
-
 	// 移動限界座標
 	const float kMoveLimitX = 33.0f;
 	const float kMoveLimitY = 17.0f;
@@ -73,14 +78,13 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	//攻撃処理
+	// 攻撃処理
 	Attack();
 
-	//弾更新
+	// 弾更新
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
-
 
 	// アフィン変換行列の作成
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
@@ -105,24 +109,31 @@ void Player::Update() {
 	ImGui::End();
 }
 
-void Player::Draw(ViewProjection& viewProjection) { 
+void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	
-	//弾描画
+
+	// 弾描画
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
 }
 
-void Player::Attack() { 
-	//a
+void Player::Attack() {
+	// a
 	if (input_->TriggerKey(DIK_SPACE)) {
-		
-		//弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		//弾を登録する
+		//弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		//速度ベクトルを自機の向きに合わせて回転させる
+		velocity = TransformNormal(velocity,worldTransform_.matWorld_);
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+
+		// 弾を登録する
 		bullets_.push_back(newBullet);
 	}
 }
