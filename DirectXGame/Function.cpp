@@ -9,6 +9,14 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	return c;
 }
 
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	Vector3 c;
+	c.x = v1.x - v2.x;
+	c.y = v1.y - v2.y;
+	c.z = v1.z - v2.z;
+	return c;
+}
+
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result { 
 		v.x* m.m[0][0] + v.y* m.m[1][0] + v.z* m.m[2][0],

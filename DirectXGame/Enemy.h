@@ -1,6 +1,12 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+//行動フェーズ
+enum class Phase {
+	Approach,	//接近する
+	Leave,		//離脱する
+};
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -28,5 +34,8 @@ private:
 	uint32_t textureHandle_ = 0u;
 	// 速度
 	Vector3 velocity_ = {0, 0, -1};
+	//フェーズ
+	Phase phase_ = Phase::Approach;
+
 
 };
