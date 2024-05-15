@@ -91,10 +91,23 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 
 }
 
-void Enemy::ApproachUpdate() {}
+void Enemy::ApproachUpdate() {
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	// 既定の位置に達したら離脱
+	if (worldTransform_.translation_.z < 0.0f) {
+		phase_ = Phase::Leave;
+	}
+}
 
-void Enemy::LeaveUpdate() {}
-
+void Enemy::LeaveUpdate() {
+	// 移動
+	worldTransform_.translation_ = Subtract(worldTransform_.translation_, velocity_);
+	// 既定の位置に達したら離脱
+	if (worldTransform_.translation_.z > 160.0f) {
+		phase_ = Phase::Approach;
+	}
+}
 void Enemy::ApproachInitialize() {
 	//発射タイマーを初期化
 	fireTimer_ = 10;
