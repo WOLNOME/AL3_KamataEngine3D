@@ -23,6 +23,9 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	ApproachInitialize();
 }
 
+// フェーズの関数テーブル
+void (Enemy::*Enemy::spFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
+
 void Enemy::Update() {
 	// デスフラグの立った弾を削除
 	bullets_.remove_if([](EnemyBullet* bullet) {
