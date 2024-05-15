@@ -56,4 +56,6 @@ private:
 	//発射タイマー
 	int32_t fireTimer_ = 0;
 
+	// メンバ関数ポインタのテーブル
+	static void (Enemy::*spFuncTable[])();
 };
