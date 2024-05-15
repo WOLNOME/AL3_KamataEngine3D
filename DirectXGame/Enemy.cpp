@@ -19,7 +19,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	// 引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
 
-	//接近フェーズ初期化
+	// 接近フェーズ初期化
 	ApproachInitialize();
 }
 
@@ -56,7 +56,6 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
-
 }
 
 void Enemy::ApproachUpdate() {
@@ -86,7 +85,7 @@ void Enemy::LeaveUpdate() {
 	}
 }
 void Enemy::ApproachInitialize() {
-	//発射タイマーを初期化
+	// 発射タイマーを初期化
 	fireTimer_ = 10;
 }
 
