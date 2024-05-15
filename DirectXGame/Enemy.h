@@ -1,6 +1,8 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "BaseEnemyState.h"
+
 //行動フェーズ
 enum class Phase {
 	Approach,	//接近する
@@ -42,8 +44,13 @@ private:
 	Vector3 velocity_ = {0, 0, -1};
 	//フェーズ
 	Phase phase_ = Phase::Approach;
+	//状態
+	BaseEnemyState* state_;
+
 
 	//メンバ関数ポインタのテーブル
 	static void (Enemy::*spFuncTable[])();
 	
+
+
 };
