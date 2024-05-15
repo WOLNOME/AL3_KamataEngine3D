@@ -40,40 +40,8 @@ void Enemy::Update() {
 	worldTransform_.UpdateMatrix();
 
 	// 速度加算
-	switch (phase_) {
-	case Phase::Approach:
-		// 移動
-		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-		// 既定の位置に達したら離脱
-		if (worldTransform_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
-		}
-		//発射タイマーカウントダウン
-		fireTimer_--;
-		//指定時間に達した場合
-		if (fireTimer_ == 0) {
-			//弾を発射
-			Fire();
-			//発射タイマーを初期化
-			fireTimer_ = kFireInterval;
-
-		}
-
-		break;
-	case Phase::Leave:
-		// 移動
-		worldTransform_.translation_ = Subtract(worldTransform_.translation_, velocity_);
-		// 既定の位置に達したら離脱
-		if (worldTransform_.translation_.z > 160.0f) {
-			phase_ = Phase::Approach;
-		}
-		break;
-	default:
-		break;
-	}
-
-	// 攻撃処理
-	//Fire();
+	//  メンバ関数ポインタに入っている関数を呼び出す
+	(this->*spFuncTable[static_cast<size_t>(phase_)])();
 
 	// 弾更新
 	for (EnemyBullet* bullet : bullets_) {
@@ -97,6 +65,15 @@ void Enemy::ApproachUpdate() {
 	// 既定の位置に達したら離脱
 	if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
+	}
+	// 発射タイマーカウントダウン
+	fireTimer_--;
+	// 指定時間に達した場合
+	if (fireTimer_ == 0) {
+		// 弾を発射
+		Fire();
+		// 発射タイマーを初期化
+		fireTimer_ = kFireInterval;
 	}
 }
 
