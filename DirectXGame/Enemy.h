@@ -28,6 +28,11 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
+	// 接近フェーズの更新関数
+	void ApproachUpdate();
+
+	// 離脱フェーズの更新関数
+	void LeaveUpdate();
 
 	void ApproachInitialize();
 	/// <summary>

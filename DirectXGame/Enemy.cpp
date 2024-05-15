@@ -91,6 +91,10 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 
 }
 
+void Enemy::ApproachUpdate() {}
+
+void Enemy::LeaveUpdate() {}
+
 void Enemy::ApproachInitialize() {
 	//発射タイマーを初期化
 	fireTimer_ = 10;
