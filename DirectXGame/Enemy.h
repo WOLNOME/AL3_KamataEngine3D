@@ -1,12 +1,16 @@
 #pragma once
+#include "EnemyBullet.h"
 #include "Model.h"
 #include "WorldTransform.h"
-#include "EnemyBullet.h"
 #include <list>
-//行動フェーズ
+
+// 自機の前方宣言
+class Player;
+
+// 行動フェーズ
 enum class Phase {
-	Approach,	//接近する
-	Leave,		//離脱する
+	Approach, // 接近する
+	Leave,    // 離脱する
 };
 
 /// <summary>
@@ -28,6 +32,7 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
+public://関数
 	// 接近フェーズの更新関数
 	void ApproachUpdate();
 
@@ -40,8 +45,23 @@ public:
 	/// </summary>
 	void Fire();
 
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+
+public: // セッター
+	void SetPlayer(Player* player) { player_ = player; }
+
+public: //ゲッター
+	Vector3 GetWorldPosition();
+
+	//弾リストを取得
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
+	// 半径
+	float GetRadius() { return rad_; };
+
 public:
-	//発射時間
+	// 発射時間
 	static const int kFireInterval = 60;
 
 
@@ -53,14 +73,21 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 速度
-	Vector3 velocity_ = {0, 0, -1};
-	//フェーズ
+	Vector3 velocity_ = {0, 0, -0.5f};
+	// フェーズ
 	Phase phase_ = Phase::Approach;
 	// 弾
 	std::list<EnemyBullet*> bullets_;
-	//発射タイマー
+	//弾の速度
+	const float bulletSpeed_ = 1.0f;
+	// 発射タイマー
 	int32_t fireTimer_ = 0;
 
 	// メンバ関数ポインタのテーブル
 	static void (Enemy::*spFuncTable[])();
+
+	// 自キャラ
+	Player* player_ = nullptr;
+	// 半径
+	const float rad_ = 1.0f;
 };

@@ -28,12 +28,22 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
-
+public://関数
 	/// <summary>
 	/// 攻撃
 	/// </summary>
 	void Attack();
 
+	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+public://ゲッター
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+	//弾リストを取得
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	// 半径
+	float GetRadius() { return rad_; };
 
 
 private:
@@ -49,5 +59,7 @@ private:
 	float inputFloat3[3] = {0,0,0};
 	//弾
 	std::list<PlayerBullet*> bullets_;
+	// 半径
+	const float rad_ = 1.0f;
 
 };

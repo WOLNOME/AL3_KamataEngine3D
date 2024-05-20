@@ -1,7 +1,7 @@
 #include "Function.h"
+#include <cassert>
 
-
-Vector3 Add(const Vector3& v1, const Vector3& v2) { 
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 c;
 	c.x = v1.x + v2.x;
 	c.y = v1.y + v2.y;
@@ -18,12 +18,32 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 }
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
-	Vector3 result { 
-		v.x* m.m[0][0] + v.y* m.m[1][0] + v.z* m.m[2][0],
-		v.x* m.m[0][1] + v.y* m.m[1][1] + v.z* m.m[2][1],
-		v.x* m.m[0][2] + v.y* m.m[1][2] + v.z* m.m[2][2]
-	};
+	Vector3 result{v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0], v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1], v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
 	return result;
+}
+
+float Length(const Vector3& v1, const Vector3& v2) {
+	float c;
+	c = sqrtf(powf(v1.x - v2.x, 2) + powf(v1.y - v2.y, 2) + powf(v1.z - v2.z, 2));
+	return c;
+}
+
+Vector3 Normalize(const Vector3& vs, const Vector3& ve, const float l) {
+	Vector3 c;
+	Vector3 sv;
+	float length = Length(vs, ve);
+	sv = Subtract(ve, vs);
+	if (length != 0) {
+		c.x = sv.x / length;
+		c.y = sv.y / length;
+		c.z = sv.z / length;
+	} else {
+		assert("正規化できません");
+	}
+	c.x *= l;
+	c.y *= l;
+	c.z *= l;
+	return c;
 }
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {

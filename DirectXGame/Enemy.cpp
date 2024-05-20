@@ -2,6 +2,7 @@
 #include "Function.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "Player.h"
 
 Enemy::~Enemy() {
 	// 解放
@@ -58,6 +59,16 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 	}
 }
 
+
+Vector3 Enemy::GetWorldPosition() {
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}
+
 void Enemy::ApproachUpdate() {
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
@@ -91,16 +102,33 @@ void Enemy::ApproachInitialize() {
 
 void Enemy::Fire() {
 	// 弾の速度
-	const float kBulletSpeed = -2.0f;
+	const float kBulletSpeed = -1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
+
+	//自キャラのワールド座標を取得する
+	Vector3 playerWorldPos;
+	playerWorldPos.x = player_->GetWorldPosition().x;
+	playerWorldPos.y = player_->GetWorldPosition().y;
+	playerWorldPos.z = player_->GetWorldPosition().z;
+	//敵キャラのワールド座標を取得する
+	Vector3 enemyWorldPos;
+	enemyWorldPos.x = GetWorldPosition().x;
+	enemyWorldPos.y = GetWorldPosition().y;
+	enemyWorldPos.z = GetWorldPosition().z;
+	//startとendベクトルの正規化
+	Vector3 normalize = Normalize(enemyWorldPos, playerWorldPos,bulletSpeed_);
+	//速度を更新
+	velocity = normalize;
 
 	// 速度ベクトルを自機の向きに合わせて回転させる
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();
-	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+	newBullet->Initialize(model_, worldTransform_.translation_,velocity );
 
 	// 弾を登録する
 	bullets_.push_back(newBullet);
 }
+
+void Enemy::OnCollision() {}
