@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "Model.h"
+#include "Player.h"
+#include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -42,35 +43,35 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-public://関数
+public: // 関数
 	/// <summary>
 	/// 衝突判定と応答
 	/// </summary>
 	void CheckAllCollision();
-
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	//3Dモデル
+	// 3Dモデル
 	Model* model_ = nullptr;
+	Model* modelSkydome_ = nullptr;
 	//*ワールドトランスフォームは各オブジェクトが各々持つもの
-	//ビュープロジェクション
+	// ビュープロジェクション
 	ViewProjection viewProjection_;
-	//自キャラ
+	// 自キャラ
 	Player* player_ = nullptr;
-	//敵キャラ
+	// 敵キャラ
 	Enemy* enemy_ = nullptr;
-	//デバッグカメラ有効
+	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
-	//デバッグカメラ
+	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
-
-
+	// 天球
+	Skydome* skydome_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

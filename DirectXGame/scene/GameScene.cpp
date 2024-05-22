@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete player_;
 	delete enemy_;
 	delete model_;
+	delete modelSkydome_;
 	delete debugCamera_;
 }
 
@@ -23,19 +24,23 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 3Dモデルの生成
 	model_ = Model::Create();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	// 自キャラの生成
 	player_ = new Player();
 	// 敵キャラの生成
 	enemy_ = new Enemy();
+	// 天球の生成
+	skydome_ = new Skydome();
 	// 自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
 	// 敵キャラの初期化
 	enemy_->Initialize(model_, {0.0f, 4.0f, 140.0f});
+	// 天球の初期化
+	skydome_->Initialize(modelSkydome_, {0.0f, 0.0f, 0.0f});
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
-
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 	// 軸方向表示を有効にする
@@ -49,6 +54,8 @@ void GameScene::Update() {
 	player_->Update();
 	// 敵キャラの更新
 	enemy_->Update();
+	// 天球の更新
+	skydome_->Update();
 
 	// 当たり判定
 	CheckAllCollision();
@@ -108,6 +115,8 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	// 敵キャラの描画
 	enemy_->Draw(viewProjection_);
+	// 天球の描画
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
