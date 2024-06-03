@@ -94,9 +94,6 @@ private: // メンバ変数
 	//レールカメラ
 	RailCamera* railCamera_ = nullptr;
 
-	//ゲームシーン
-	GameScene* gameScene_ = nullptr;
-
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

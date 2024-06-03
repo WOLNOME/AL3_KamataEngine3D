@@ -107,6 +107,7 @@ void Player::Attack() {
 		//速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity,worldTransform_.matWorld_);
 
+
 	}
 }
 

@@ -68,4 +68,7 @@ private:
 	// 半径
 	const float rad_ = 1.0f;
 
+	//ゲームシーン
+	GameScene* gameScene_ = nullptr;
+
 };
