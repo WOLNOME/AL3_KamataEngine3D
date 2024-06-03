@@ -2,11 +2,13 @@
 #include "Function.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "GameScene.h"
 #include "Player.h"
 
 Enemy::~Enemy() {
-	
+	// 解放
+	for (EnemyBullet* bullet : bullets_) {
+		delete bullet;
+	}
 }
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
@@ -26,7 +28,14 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 void (Enemy::*Enemy::spFuncTable[])() = {&Enemy::ApproachUpdate, &Enemy::LeaveUpdate};
 
 void Enemy::Update() {
-	
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
@@ -35,13 +44,19 @@ void Enemy::Update() {
 	//  メンバ関数ポインタに入っている関数を呼び出す
 	(this->*spFuncTable[static_cast<size_t>(phase_)])();
 
-	
+	// 弾更新
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Update();
+	}
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {
 	// モデルの描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	
+	// 弾描画
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
 }
 
 
@@ -112,8 +127,8 @@ void Enemy::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_,velocity );
 
-	//弾を登録
-	gameScene_->AddEnemyBullet(newBullet);
+	// 弾を登録する
+	bullets_.push_back(newBullet);
 }
 
 void Enemy::OnCollision() {}

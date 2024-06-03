@@ -1,11 +1,10 @@
 #pragma once
+#include "EnemyBullet.h"
 #include "Model.h"
 #include "WorldTransform.h"
-#include "EnemyBullet.h"
 #include <list>
 
-// 前方宣言
-class GameScene;
+// 自機の前方宣言
 class Player;
 
 // 行動フェーズ
@@ -52,11 +51,12 @@ public://関数
 
 public: // セッター
 	void SetPlayer(Player* player) { player_ = player; }
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 public: //ゲッター
 	Vector3 GetWorldPosition();
 
+	//弾リストを取得
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 	// 半径
 	float GetRadius() { return rad_; };
 
@@ -76,7 +76,8 @@ private:
 	Vector3 velocity_ = {0, 0, -0.5f};
 	// フェーズ
 	Phase phase_ = Phase::Approach;
-	
+	// 弾
+	std::list<EnemyBullet*> bullets_;
 	//弾の速度
 	const float bulletSpeed_ = 1.0f;
 	// 発射タイマー
@@ -89,7 +90,4 @@ private:
 	Player* player_ = nullptr;
 	// 半径
 	const float rad_ = 1.0f;
-
-	//ゲームシーン
-	GameScene* gameScene_ = nullptr;
 };

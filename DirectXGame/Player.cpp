@@ -1,11 +1,13 @@
 #include "Player.h"
 #include "Function.h"
 #include "ImGuiManager.h"
-#include "GameScene.h"
 #include <cassert>
 
 Player::~Player() {
-	
+	// 解放
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& position) {
@@ -20,7 +22,14 @@ void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& pos
 }
 
 void Player::Update() {
-	
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 	/// 旋回処理
 	// 回転速さ
@@ -70,6 +79,11 @@ void Player::Update() {
 	// 攻撃処理
 	Attack();
 
+	// 弾更新
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
+	}
+
 	//行列の更新
 	worldTransform_.UpdateMatrix();
 
@@ -93,7 +107,10 @@ void Player::Update() {
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	
+	// 弾描画
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
 }
 
 void Player::Attack() {
@@ -107,6 +124,12 @@ void Player::Attack() {
 		//速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity,worldTransform_.matWorld_);
 
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
+
+		// 弾を登録する
+		bullets_.push_back(newBullet);
 	}
 }
 

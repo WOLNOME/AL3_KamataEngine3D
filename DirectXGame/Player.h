@@ -5,9 +5,6 @@
 #include "PlayerBullet.h"
 #include <list>
 
-//前方宣言
-class GameScene;
-
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -43,6 +40,8 @@ public://関数
 public://ゲッター
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();
+	//弾リストを取得
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 半径
 	float GetRadius() { return rad_; };
 
@@ -52,7 +51,7 @@ public://セッター
 	/// </summary>
 	/// <param name="parent">親となるワールドトランスフォームをセット</param>
 	void SetParent(const WorldTransform* parent);
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
 
 private:
 	//ワールド変換データ
@@ -65,6 +64,8 @@ private:
 	Input* input_ = nullptr;
 	//デバッグテキスト
 	float inputFloat3[3] = {0,0,0};
+	//弾
+	std::list<PlayerBullet*> bullets_;
 	// 半径
 	const float rad_ = 1.0f;
 
