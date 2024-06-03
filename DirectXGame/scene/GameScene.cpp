@@ -8,7 +8,9 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete player_;
-	delete enemy_;
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
 	delete model_;
 	delete modelSkydome_;
 	delete debugCamera_;
@@ -37,8 +39,6 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	// 自キャラの生成
 	player_ = new Player();
-	// 敵キャラの生成
-	enemy_ = new Enemy();
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 自キャラの初期化
@@ -46,8 +46,6 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, textureHandle_, playerPosition);
 	//自キャラにゲームシーンを渡す
 	player_->SetGameScene(this);
-	// 敵キャラの初期化
-	enemy_->Initialize(model_, {0.0f, 4.0f, 140.0f});
 	//敵キャラにゲームシーンを渡す
 	enemy_->SetGameScene(this);
 
@@ -87,10 +85,26 @@ void GameScene::Update() {
 		}
 		return false;
 	});
+	//敵の出現処理
+	enemyAppearTimer_--;
+	if (enemyAppearTimer_ == 0) {
+		//タイマーが0になったら敵出現
+		// 生成、初期化、セッターの登録
+		Enemy* enemy = new Enemy();
+		enemy->Initialize(model_, GetWorldPosition());
+
+		// 弾を登録する
+		gameScene_->AddPlayerBullet(newBullet);
+		//タイマーリセット
+		enemyAppearTimer_ = kEnemyAppearInterval;
+	}
+
 	// 自キャラの更新
 	player_->Update();
 	// 敵キャラの更新
-	enemy_->Update();
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 	// 自弾更新
 	for (PlayerBullet* bullet : playerBullets_) {
 		bullet->Update();
@@ -165,7 +179,9 @@ void GameScene::Draw() {
 	// 自キャラの描画
 	player_->Draw(viewProjection_);
 	// 敵キャラの描画
-	enemy_->Draw(viewProjection_);
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw(viewProjection_);
+	}
 	// 自弾描画
 	for (PlayerBullet* bullet : playerBullets_) {
 		bullet->Draw(viewProjection_);
@@ -272,3 +288,9 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
 	// リストに登録する
 	enemyBullets_.push_back(enemyBullet);
 }
+
+///敵を生成したい時
+//生成
+//初期化
+//ゲームシーン渡す
+//自キャラのアドレス渡す

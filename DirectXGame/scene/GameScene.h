@@ -80,7 +80,9 @@ private: // メンバ変数
 	// 自キャラ
 	Player* player_ = nullptr;
 	// 敵キャラ
-	Enemy* enemy_ = nullptr;
+	static const int32_t kEnemyAppearInterval = 60 * 5;
+	int32_t enemyAppearTimer_ = kEnemyAppearInterval;
+	std::list<Enemy*> enemies_;
 	// 弾
 	std::list<PlayerBullet*> playerBullets_;
 	// 敵弾
