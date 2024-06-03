@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "Player.h"
 #include "Skydome.h"
+#include "RailCamera.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -72,6 +73,9 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 	// 天球
 	Skydome* skydome_ = nullptr;
+	//レールカメラ
+	RailCamera* railCamera_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用

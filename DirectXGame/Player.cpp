@@ -10,12 +10,13 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& position) {
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandle;
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 }
@@ -29,9 +30,6 @@ void Player::Update() {
 		}
 		return false;
 	});
-
-	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
 
 	/// 旋回処理
 	// 回転速さ
@@ -86,11 +84,8 @@ void Player::Update() {
 		bullet->Update();
 	}
 
-	// アフィン変換行列の作成
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	// 定数バッファに転送
-	worldTransform_.TransferMatrix();
+	//行列の更新
+	worldTransform_.UpdateMatrix();
 
 	// キャラクターの座標を画面表示する処理
 	//  デバッグテキストの表示
@@ -119,7 +114,7 @@ void Player::Draw(ViewProjection& viewProjection) {
 }
 
 void Player::Attack() {
-	// a
+	// 弾発射
 	if (input_->TriggerKey(DIK_SPACE)) {
 
 		//弾の速度
@@ -131,7 +126,7 @@ void Player::Attack() {
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
 
 		// 弾を登録する
 		bullets_.push_back(newBullet);
@@ -147,4 +142,9 @@ Vector3 Player::GetWorldPosition() {
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	return worldPos; 
+}
+
+void Player::SetParent(const WorldTransform* parent) {
+	//親子関係を結ぶ
+	worldTransform_.parent_=parent;
 }

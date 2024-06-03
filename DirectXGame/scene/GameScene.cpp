@@ -12,6 +12,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete modelSkydome_;
 	delete debugCamera_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -35,19 +36,28 @@ void GameScene::Initialize() {
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_);
+	Vector3 playerPosition(0, 0, 20.0f);
+	player_->Initialize(model_, textureHandle_, playerPosition);
 	// 敵キャラの初期化
 	enemy_->Initialize(model_, {0.0f, 4.0f, 140.0f});
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, {0.0f, 0.0f, 0.0f});
+
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+	// レールカメラの生成
+	railCamera_ = new RailCamera();
+	// レールカメラの初期化
+	railCamera_->Initialize({0.0f, 0.0f, -6.0f}, {0.0f, 0.0f, 0.0f});
 	// 軸方向表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+	// 自キャラ(子)とレールカメラ(親)の親子関係を結ぶ
+	player_->SetParent(&railCamera_->GetWorldTransform());
+	
 }
 
 void GameScene::Update() {
@@ -70,7 +80,8 @@ void GameScene::Update() {
 		}
 	}
 #endif // _DEBUG
-	// カメラの処理
+	/// カメラの処理
+
 	if (isDebugCameraActive_) {
 		// デバッグカメラの更新
 		debugCamera_->Update();
@@ -80,8 +91,12 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 
 	} else {
+		// レールカメラの更新
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
+		viewProjection_.TransferMatrix();
 	}
 }
 

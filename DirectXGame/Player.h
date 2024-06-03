@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model,uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle ,const Vector3& position);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -44,6 +44,13 @@ public://ゲッター
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 半径
 	float GetRadius() { return rad_; };
+
+public://セッター
+	/// <summary>
+	/// 親となるワールドトランスフォームをセット
+	/// </summary>
+	/// <param name="parent">親となるワールドトランスフォームをセット</param>
+	void SetParent(const WorldTransform* parent);
 
 
 private:
