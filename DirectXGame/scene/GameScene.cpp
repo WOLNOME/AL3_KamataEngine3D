@@ -64,7 +64,8 @@ void GameScene::Initialize() {
 	// 自キャラ(子)とレールカメラ(親)の親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	
+	// ファイル読み込み
+	LoadEnemyPopData();
 
 }
 
@@ -94,8 +95,7 @@ void GameScene::Update() {
 		return false;
 	});
 
-	// ファイル読み込み
-	LoadEnemyPopData();
+	
 	// 敵の出現処理
 	UpdateEnemyPopCommands();
 
