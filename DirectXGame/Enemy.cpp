@@ -116,4 +116,4 @@ void Enemy::Fire() {
 	gameScene_->AddEnemyBullet(newBullet);
 }
 
-void Enemy::OnCollision() {}
+void Enemy::OnCollision() { isDead_ = true; }

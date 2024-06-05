@@ -13,7 +13,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& radian) {
 
 void RailCamera::Update() {
 	// 移動の加算
-	worldTransForm_.translation_.z += -0.5f;
+	worldTransForm_.translation_.z += 0.01f;
 
 	// 回転の加算
 

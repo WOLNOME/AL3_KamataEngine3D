@@ -49,6 +49,8 @@ public://関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
+	//デスフラグ
+	bool isDead() const { return isDead_; }
 
 public: // セッター
 	void SetPlayer(Player* player) { player_ = player; }
@@ -89,6 +91,8 @@ private:
 	Player* player_ = nullptr;
 	// 半径
 	const float rad_ = 1.0f;
+	// デスフラグ
+	bool isDead_ = false;
 
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;

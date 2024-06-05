@@ -9,12 +9,12 @@
 #include "Model.h"
 #include "Player.h"
 #include "PlayerBullet.h"
-#include "Skydome.h"
 #include "RailCamera.h"
+#include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -63,6 +63,19 @@ public: // 関数
 	/// </summary>
 	/// <param name="enemyBullet">敵弾</param>
 	void AddEnemyBullet(EnemyBullet* enemyBullet);
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+	/// <summary>
+	/// 敵発生
+	/// </summary>
+	/// <param name="position">発生座標</param>
+	void AppearEnemy(const Vector3 position);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -80,20 +93,22 @@ private: // メンバ変数
 	// 自キャラ
 	Player* player_ = nullptr;
 	// 敵キャラ
-	static const int32_t kEnemyAppearInterval = 60 * 5;
-	int32_t enemyAppearTimer_ = kEnemyAppearInterval;
+	bool waiting_ = false;
+	int32_t waitTimer_ = 0;
 	std::list<Enemy*> enemies_;
-	// 弾
+	// 自弾
 	std::list<PlayerBullet*> playerBullets_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
+	// 敵発生コマンド
+	std::stringstream enemyPopCommnads;
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
 	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 	// 天球
 	Skydome* skydome_ = nullptr;
-	//レールカメラ
+	// レールカメラ
 	RailCamera* railCamera_ = nullptr;
 
 	/// <summary>
