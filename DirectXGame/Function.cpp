@@ -1,6 +1,14 @@
 #include "Function.h"
 #include <cassert>
 
+Vector3 Multiply(const float& s, const Vector3& v) { 
+	Vector3 c;
+	c.x = s * v.x;
+	c.y = s * v.y;
+	c.z = s * v.z;
+	return c;
+}
+
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 c;
 	c.x = v1.x + v2.x;
@@ -28,6 +36,12 @@ float Length(const Vector3& v1, const Vector3& v2) {
 	return c;
 }
 
+float Length(const Vector3& v) {
+	float c;
+	c = sqrtf(powf(v.x, 2) + powf(v.y, 2) + powf(v.z, 2));
+	return c;
+}
+
 Vector3 Normalize(const Vector3& vs, const Vector3& ve, const float l) {
 	Vector3 c;
 	Vector3 sv;
@@ -43,6 +57,34 @@ Vector3 Normalize(const Vector3& vs, const Vector3& ve, const float l) {
 	c.x *= l;
 	c.y *= l;
 	c.z *= l;
+	return c;
+}
+
+Vector3 Normalize(const Vector3& v) {
+	Vector3 c;
+	// 長さを求める
+	float length = Length(v);
+	// length=0で無ければ正規化
+	if (length != 0) {
+		c.x = v.x / length;
+		c.y = v.y / length;
+		c.z = v.z / length;
+	} else {
+		assert("正規化できません");
+	}
+	return c;
+}
+
+Vector3 Transform(const Vector3& v, const Matrix4x4& m) {
+	Vector3 c;
+	c.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + 1.0f * m.m[3][0];
+	c.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + 1.0f * m.m[3][1];
+	c.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + 1.0f * m.m[3][2];
+	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + 1.0f * m.m[3][3];
+	assert(w != 0.0f);
+	c.x /= w;
+	c.y /= w;
+	c.z /= w;
 	return c;
 }
 
@@ -200,5 +242,26 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 	c.m[3][3] = (1.0f / A) * (m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[0][1] * m.m[1][2] * m.m[2][0] + m.m[0][2] * m.m[1][0] * m.m[2][1] - m.m[0][2] * m.m[1][1] * m.m[2][0] -
 	                          m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][2] * m.m[2][1]);
 
+	return c;
+}
+
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
+	Matrix4x4 c;
+	c.m[0][0] = width / 2;
+	c.m[0][1] = 0;
+	c.m[0][2] = 0;
+	c.m[0][3] = 0;
+	c.m[1][0] = 0;
+	c.m[1][1] = -height / 2;
+	c.m[1][2] = 0;
+	c.m[1][3] = 0;
+	c.m[2][0] = 0;
+	c.m[2][1] = 0;
+	c.m[2][2] = maxDepth - minDepth;
+	c.m[2][3] = 0;
+	c.m[3][0] = left + (width / 2);
+	c.m[3][1] = top + (height / 2);
+	c.m[3][2] = minDepth;
+	c.m[3][3] = 1;
 	return c;
 }

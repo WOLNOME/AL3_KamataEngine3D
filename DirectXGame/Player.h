@@ -1,6 +1,7 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Sprite.h"
 #include "Input.h"
 #include "PlayerBullet.h"
 #include <list>
@@ -25,11 +26,15 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update(ViewProjection& viewProjection);
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	void DrawUI();
 
 public://関数
 	/// <summary>
@@ -40,7 +45,9 @@ public://関数
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
-public://ゲッター
+	
+
+public: // ゲッター
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();
 	// 半径
@@ -57,10 +64,14 @@ public://セッター
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_;
 	//モデル
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+	//2Dレティクル用スプライト
+	Sprite* sprite2DReticle_ = nullptr;
 	//キーボード入力
 	Input* input_ = nullptr;
 	//デバッグテキスト
