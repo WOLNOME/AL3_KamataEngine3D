@@ -33,6 +33,15 @@ public:
 	//離脱フェーズの更新関数
 	void LeaveUpdate();
 
+public:
+	void SetTranslation(Vector3 translation);
+
+public:
+	WorldTransform GetWorldTransform() { return worldTransform_; }
+
+public:
+	void ChangeState(BaseEnemyState* newState);
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;

@@ -1,8 +1,6 @@
 #pragma once
+#include "Enemy.h"
 class BaseEnemyState {
 public:
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
+	virtual void Update(Enemy* pEnemy) = 0;
 };

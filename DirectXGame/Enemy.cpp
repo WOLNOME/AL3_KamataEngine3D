@@ -47,3 +47,10 @@ void Enemy::LeaveUpdate() {
 		phase_ = Phase::Approach;
 	}
 }
+
+void Enemy::SetTranslation(Vector3 translation) { worldTransform_.translation_ = translation; }
+
+void Enemy::ChangeState(BaseEnemyState* newState) {
+	delete state_; 
+	state_ = newState;
+}
