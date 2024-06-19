@@ -3,10 +3,9 @@
 
 void EnemyStateApproach::Update(Enemy* pEnemy) { 
 	// 移動
-	
-	pEnemy_>worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	pEnemy->SetTranslation(Add(pEnemy->GetTranslation(), velocity_));
 	// 既定の位置に達したら離脱
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
+	if (pEnemy->GetTranslation().z < 0.0f) {
+		pEnemy->ChangeState(new EnemyStateLeave());
 	}
 }

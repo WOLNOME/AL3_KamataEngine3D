@@ -1,12 +1,15 @@
 #pragma once
+#include "BaseEnemyState.h"
+#include "EnemyStateApproach.h"
+#include "EnemyStateLeave.h"
 #include "Model.h"
 #include "WorldTransform.h"
-#include "BaseEnemyState.h"
 
-//行動フェーズ
+class BaseEnemyState;
+// 行動フェーズ
 enum class Phase {
-	Approach,	//接近する
-	Leave,		//離脱する
+	Approach, // 接近する
+	Leave,    // 離脱する
 };
 
 /// <summary>
@@ -14,6 +17,8 @@ enum class Phase {
 /// </summary>
 class Enemy {
 public:
+	Enemy();
+	~Enemy();
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -26,18 +31,12 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
-	
-	//接近フェーズの更新関数
-	void ApproachUpdate();
-
-	//離脱フェーズの更新関数
-	void LeaveUpdate();
 
 public:
-	void SetTranslation(Vector3 translation);
+	void SetTranslation(Vector3 translation) { worldTransform_.translation_ = translation; }
 
 public:
-	WorldTransform GetWorldTransform() { return worldTransform_; }
+	Vector3 GetTranslation() { return worldTransform_.translation_; }
 
 public:
 	void ChangeState(BaseEnemyState* newState);
@@ -49,17 +48,6 @@ private:
 	Model* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	// 速度
-	Vector3 velocity_ = {0, 0, -1};
-	//フェーズ
-	Phase phase_ = Phase::Approach;
-	//状態
+	// 状態
 	BaseEnemyState* state_;
-
-
-	//メンバ関数ポインタのテーブル
-	static void (Enemy::*spFuncTable[])();
-	
-
-
 };
