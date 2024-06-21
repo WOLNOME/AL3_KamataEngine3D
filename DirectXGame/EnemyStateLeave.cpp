@@ -1,11 +1,11 @@
 #include "EnemyStateLeave.h"
 #include "Function.h"
 
-void EnemyStateLeave::Update(Enemy* pEnemy) {
+void EnemyStateLeave::Update() {
 	// 移動
-	pEnemy->SetTranslation(Add(pEnemy->GetTranslation(), velocity_));
+	enemy_->SetTranslation(Add(enemy_->GetTranslation(), velocity_));
 	// 既定の位置に達したら離脱
-	if (pEnemy->GetTranslation().z < 0.0f) {
-		pEnemy->ChangeState(new EnemyStateApproach());
+	if (enemy_->GetTranslation().z < 0.0f) {
+		enemy_->ChangeState(new EnemyStateApproach());
 	}
 }

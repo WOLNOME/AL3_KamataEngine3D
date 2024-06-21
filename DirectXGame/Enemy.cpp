@@ -19,7 +19,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 
 void Enemy::Update() {
 	// 速度加算
-	state_->Update(this);
+	state_->Update();
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
