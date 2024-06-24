@@ -39,7 +39,7 @@ public:
 	Vector3 GetTranslation() { return worldTransform_.translation_; }
 
 public:
-	void ChangeState(BaseEnemyState* newState);
+	void ChangeState(std::unique_ptr<BaseEnemyState> state);
 
 private:
 	// ワールド変換データ
@@ -49,5 +49,5 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// 状態
-	BaseEnemyState* state_;
+	std::unique_ptr<BaseEnemyState> state_;
 };

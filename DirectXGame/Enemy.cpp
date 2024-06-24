@@ -3,9 +3,9 @@
 #include "TextureManager.h"
 #include <cassert>
 
-Enemy::Enemy() { state_ = new EnemyStateApproach(); }
+Enemy::Enemy() { }
 
-Enemy::~Enemy() {  }
+Enemy::~Enemy() { }
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
 	// NULLポインタチェック
@@ -15,6 +15,9 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+	//初期化状態をセット
+	ChangeState(std::make_unique<EnemyStateApproach>(this));
+
 }
 
 void Enemy::Update() {
@@ -30,7 +33,5 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-void Enemy::ChangeState(BaseEnemyState* newState) {
-	delete state_;
-	state_ = newState;
-}
+void Enemy::ChangeState(std::unique_ptr<BaseEnemyState> state) { state_ = std::move(state); }
+
