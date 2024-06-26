@@ -14,3 +14,6 @@ Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Vector3 Multiply(const float& s, const Vector3& v);
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);

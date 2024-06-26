@@ -169,3 +169,16 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 
 	return c;
 }
+
+Vector3 Multiply(const float& s, const Vector3& v) {
+	Vector3 c;
+	c.x = s * v.x;
+	c.y = s * v.y;
+	c.z = s * v.z;
+	return c;
+}
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	Vector3 p;
+	p = Add(v1, Multiply(t, Subtract(v2, v1)));
+}
