@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
+#include "TimeCall.h"
 #include <list>
 //行動フェーズ
 enum class Phase {
@@ -41,6 +42,13 @@ public:
 	void Fire();
 
 public:
+	/// <summary>
+	/// 弾を発射してタイマーをリセットするコールバック関数
+	/// </summary>
+	void FireReset();
+	
+
+public:
 	//発射時間
 	static const int kFireInterval = 60;
 
@@ -58,9 +66,14 @@ private:
 	Phase phase_ = Phase::Approach;
 	// 弾
 	std::list<EnemyBullet*> bullets_;
-	//発射タイマー
-	int32_t fireTimer_ = 0;
 
 	// メンバ関数ポインタのテーブル
 	static void (Enemy::*spFuncTable[])();
+
+private:
+	//発射間隔
+	uint32_t fireInterval_;
+
+	//時限発動のリスト
+	std::list<TimeCall*> timedCalls_;
 };

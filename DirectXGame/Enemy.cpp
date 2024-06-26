@@ -8,6 +8,9 @@ Enemy::~Enemy() {
 	for (EnemyBullet* bullet : bullets_) {
 		delete bullet;
 	}
+	for (TimeCall* timedCall : timedCalls_) {
+		delete timedCall;
+	}
 }
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
@@ -19,7 +22,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	// 引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
 
-	// 接近フェーズ初期化
+	//接近関数の初期化
 	ApproachInitialize();
 }
 
@@ -35,6 +38,14 @@ void Enemy::Update() {
 		}
 		return false;
 	});
+	//終了したタイマーを削除
+	timedCalls_.remove_if([](TimeCall* timeCall) {
+		if (timeCall->IsFinished()) {
+			delete timeCall;
+			return true;
+		}
+		return false;
+	});
 
 	// ワールドトランスフォームの更新
 	worldTransform_.UpdateMatrix();
@@ -46,6 +57,10 @@ void Enemy::Update() {
 	// 弾更新
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Update();
+	}
+	// 範囲forでリストの全要素について回す
+	for (TimeCall* timedCall : timedCalls_) {
+		timedCall->Update();
 	}
 }
 
@@ -65,15 +80,6 @@ void Enemy::ApproachUpdate() {
 	if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
 	}
-	// 発射タイマーカウントダウン
-	fireTimer_--;
-	// 指定時間に達した場合
-	if (fireTimer_ == 0) {
-		// 弾を発射
-		Fire();
-		// 発射タイマーを初期化
-		fireTimer_ = kFireInterval;
-	}
 }
 
 void Enemy::LeaveUpdate() {
@@ -84,10 +90,7 @@ void Enemy::LeaveUpdate() {
 		phase_ = Phase::Approach;
 	}
 }
-void Enemy::ApproachInitialize() {
-	// 発射タイマーを初期化
-	fireTimer_ = 10;
-}
+void Enemy::ApproachInitialize() { fireInterval_ = 60; }
 
 void Enemy::Fire() {
 	// 弾の速度
@@ -103,4 +106,22 @@ void Enemy::Fire() {
 
 	// 弾を登録する
 	bullets_.push_back(newBullet);
+}
+
+void Enemy::FireReset() {
+	//弾を発射する
+	Fire();
+
+	//発射タイマーをセットする
+	timedCalls_.push_back(new TimeCall(std::bind(&Enemy::FireReset, this), fireInterval_));
+
+	//上のプログラムのディティール
+	////メンバ関数と呼び出し元をbindしてstd::functionに代入
+	//std::function<void(void)> callback = std::bind(&Enemy::FireReset, this);
+	////時限発動イベントを生成
+	//TimeCall* timedCall = new TimeCall(callback, fireInterval);
+	////時限発動イベントを時限発動イベントリストに追加
+	//timedCalls_.push_back(timedCall);
+
+
 }
