@@ -79,6 +79,8 @@ void Enemy::ApproachUpdate() {
 	// 既定の位置に達したら離脱
 	if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
+		//時限発動イベントクリア
+		timedCalls_.clear();
 	}
 }
 
@@ -88,9 +90,13 @@ void Enemy::LeaveUpdate() {
 	// 既定の位置に達したら離脱
 	if (worldTransform_.translation_.z > 160.0f) {
 		phase_ = Phase::Approach;
+		ApproachInitialize();
 	}
 }
-void Enemy::ApproachInitialize() { fireInterval_ = 60; }
+void Enemy::ApproachInitialize() {
+	// 発射タイマーをセットする
+	timedCalls_.push_back(new TimeCall(std::bind(&Enemy::FireReset, this), fireInterval_));
+}
 
 void Enemy::Fire() {
 	// 弾の速度

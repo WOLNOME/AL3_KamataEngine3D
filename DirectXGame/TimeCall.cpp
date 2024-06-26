@@ -2,7 +2,7 @@
 
 TimeCall::TimeCall(std::function<void(void)> callBack, uint32_t time) { 
 	//初期化
-	callBack_ = callBack; 
+	FireReset_ = callBack; 
 	time_ = time;
 }
 
@@ -15,7 +15,7 @@ void TimeCall::Update() {
 	if (time_ <= 0) {
 		isFinish_ = true;
 		//コールバック関数呼び出し
-		std::function<void(void)> result = callBack_;
+		FireReset_();
 	}
 
 }

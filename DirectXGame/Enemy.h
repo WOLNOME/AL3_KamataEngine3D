@@ -1,13 +1,13 @@
 #pragma once
-#include "Model.h"
-#include "WorldTransform.h"
 #include "EnemyBullet.h"
+#include "Model.h"
 #include "TimeCall.h"
+#include "WorldTransform.h"
 #include <list>
-//行動フェーズ
+// 行動フェーズ
 enum class Phase {
-	Approach,	//接近する
-	Leave,		//離脱する
+	Approach, // 接近する
+	Leave,    // 離脱する
 };
 
 /// <summary>
@@ -46,12 +46,10 @@ public:
 	/// 弾を発射してタイマーをリセットするコールバック関数
 	/// </summary>
 	void FireReset();
-	
 
 public:
-	//発射時間
+	// 発射時間
 	static const int kFireInterval = 60;
-
 
 private:
 	// ワールド変換データ
@@ -62,7 +60,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	// 速度
 	Vector3 velocity_ = {0, 0, -1};
-	//フェーズ
+	// フェーズ
 	Phase phase_ = Phase::Approach;
 	// 弾
 	std::list<EnemyBullet*> bullets_;
@@ -71,9 +69,9 @@ private:
 	static void (Enemy::*spFuncTable[])();
 
 private:
-	//発射間隔
-	uint32_t fireInterval_;
+	// 発射間隔
+	uint32_t fireInterval_ = 60;
 
-	//時限発動のリスト
+	// 時限発動のリスト
 	std::list<TimeCall*> timedCalls_;
 };

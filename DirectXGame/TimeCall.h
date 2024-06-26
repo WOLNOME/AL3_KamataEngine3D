@@ -11,7 +11,7 @@ public:
 
 private:
 	//コールバック
-	std::function<void(void)> callBack_;
+	std::function<void(void)> FireReset_;
 	//残り時間
 	uint32_t time_;
 	//完了フラグ
