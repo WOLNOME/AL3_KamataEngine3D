@@ -14,6 +14,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector
 	worldTransform_.Initialize();
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
+	
 	//速度初期化
 	velocity_ = velocity;
 
