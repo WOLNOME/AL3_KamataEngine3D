@@ -148,3 +148,5 @@ Vector3 Player::GetWorldPosition() {
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	return worldPos; 
 }
+
+Vector3 Player::GetTranslation() { return worldTransform_.translation_; }

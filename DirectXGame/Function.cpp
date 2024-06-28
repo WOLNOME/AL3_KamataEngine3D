@@ -41,6 +41,18 @@ float Length(const Vector3& v1, const Vector3& v2) {
 	return c;
 }
 
+float Length2(const Vector3& v) {
+	float c;
+	c = sqrtf(powf(v.x, 2) + powf(v.y, 2) + powf(v.z, 2));
+	return c;
+}
+
+float Length2(const Vector2& v) { 
+	float c;
+	c = sqrtf(powf(v.x, 2) + powf(v.y, 2));
+	return c;
+}
+
 Vector3 Normalize(const Vector3& vs, const Vector3& ve, const float l) {
 	Vector3 c;
 	Vector3 sv;
@@ -56,6 +68,21 @@ Vector3 Normalize(const Vector3& vs, const Vector3& ve, const float l) {
 	c.x *= l;
 	c.y *= l;
 	c.z *= l;
+	return c;
+}
+
+Vector3 Normalize2(const Vector3& v) {
+	Vector3 c;
+	// 長さを求める
+	float length = Length2(v);
+	// length=0で無ければ正規化
+	if (length != 0) {
+		c.x = v.x / length;
+		c.y = v.y / length;
+		c.z = v.z / length;
+	} else {
+		assert("正規化できません");
+	}
 	return c;
 }
 
@@ -178,7 +205,46 @@ Vector3 Multiply(const float& s, const Vector3& v) {
 	return c;
 }
 
+float Dot(const Vector3& v1, const Vector3& v2) {
+	float c;
+	c = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return c;
+}
+
+float Dot2(const Vector2& v1, const Vector2& v2) {
+	float c;
+	c = v1.x * v2.x + v1.y * v2.y;
+	return c;
+}
+
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 	Vector3 p;
 	p = Add(v1, Multiply(t, Subtract(v2, v1)));
+	return p;
+}
+
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+	Vector3 result;
+	//各ベクトルを正規化
+	Vector3 v1n, v2n;
+	v1n = Normalize2(v1);
+	v2n = Normalize2(v2);
+	//内積を求める→cosθ
+	float dot = Dot(v1n, v2n);
+	//sinθを求める
+	if (dot > 1.0f) {
+		dot = 1.0f;
+	}
+	//アークコサインでθの角度を求める
+	float theta = std::acos(dot);
+	//シータの角度からsinθを求める
+	float sinTheta = std::sin(theta);
+	//サイン(θ(1-t))を求める
+	float sinThetaFrom = std::sin((1 - t) * theta);
+	//sinθtを求める
+	float sinThetaTo = std::sin(t * theta);
+	//球面線形補完したベクトル(単位ベクトル)
+	Vector3 nvec = sinThetaFrom / sinTheta * v1n + sinThetaTo / sinTheta * v2n;
+
+	return result;
 }

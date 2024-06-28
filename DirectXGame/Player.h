@@ -40,6 +40,9 @@ public://関数
 public://ゲッター
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();
+	//ワールドトランスフォームを取得
+	Vector3 GetTranslation();
+
 	//弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 半径

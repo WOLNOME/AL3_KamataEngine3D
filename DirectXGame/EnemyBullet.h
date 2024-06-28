@@ -1,6 +1,9 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Player.h"
+
+class Player;
 
 class EnemyBullet {
 public:
@@ -28,6 +31,9 @@ public://ゲッター
 	// 半径
 	float GetRadius() { return rad_; };
 
+public://セッター
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -37,6 +43,8 @@ private:
 	uint32_t textureHandle_ = 0u;
 	// 移動ベクトル
 	Vector3 velocity_;
+	//スピード
+	float speed_ = 1.0f;
 	// 寿命
 	static const int32_t kLifeTime = 60 * 5;
 	// デスタイマー
@@ -45,4 +53,7 @@ private:
 	bool isDead_ = false;
 	//半径
 	const float rad_ = 1.0f;
+
+	//プレイヤー
+	Player* player_ = nullptr;
 };
