@@ -16,7 +16,7 @@ enum class Phase {
 /// <summary>
 /// 敵
 /// </summary>
-class Enemy {
+class Enemy:public Collider {
 public:
 	~Enemy();
 	/// <summary>
@@ -46,14 +46,14 @@ public://関数
 	void Fire();
 
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision()override;
 
 
 public: // セッター
 	void SetPlayer(Player* player) { player_ = player; }
 
 public: //ゲッター
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	//弾リストを取得
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }

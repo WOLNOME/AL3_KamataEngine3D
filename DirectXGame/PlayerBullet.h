@@ -1,4 +1,5 @@
 #pragma once
+#include "Collider.h"
 #include "Model.h"
 #include "WorldTransform.h"
 
@@ -6,7 +7,7 @@
 /// <summary>
 /// 自キャラの弾
 /// </summary>
-class PlayerBullet {
+class PlayerBullet : public Collider{
 public:
 
 	bool isDead() const { return isDead_; }
@@ -26,10 +27,10 @@ public:
 
 public://関数
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision()override;
 
 public://ゲッター
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition() override;
 
 	//半径
 	float GetRadius() { return rad_; };

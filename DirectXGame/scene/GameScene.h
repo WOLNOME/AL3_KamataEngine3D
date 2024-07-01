@@ -70,6 +70,8 @@ private: // メンバ変数
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
+private:
+	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
 
 	/// <summary>

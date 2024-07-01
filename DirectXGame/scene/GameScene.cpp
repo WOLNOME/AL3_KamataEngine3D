@@ -128,52 +128,28 @@ void GameScene::Draw() {
 }
 
 void GameScene::CheckAllCollision() {
-	// 衝突判定AとBの座標
-	Vector3 posA, posB;
-
+	
 	// 自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	// 敵弾リストの取得
 	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
 
 #pragma region 自キャラと敵弾の当たり判定
-	// 自キャラの座標
-	posA = player_->GetWorldPosition();
-
+	
 	// 自キャラと敵弾全ての当たり判定
 	for (EnemyBullet* bullet : enemyBullets) {
-		// 敵弾の座標
-		posB = bullet->GetWorldPosition();
-		// 座標AとBの距離を求める
-		float length = Length(posA, posB);
-		// 球と球の交差判定
-		if (length <= pow(player_->GetRadius() + bullet->GetRadius(), 2)) {
-			// 自キャラの衝突時コールバックを呼び出す
-			player_->OnCollision();
-			// 敵弾の衝突字コールバックを呼び出す
-			bullet->OnCollision();
-		}
+		//ペアの衝突判定
+		CheckCollisionPair(player_, bullet);
 	}
 
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
-	// 敵キャラの座標
-	posA = enemy_->GetWorldPosition();
-
+	
 	// 自弾と敵キャラ全ての当たり判定
 	for (PlayerBullet* bullet : playerBullets) {
-		// 敵弾の座標
-		posB = bullet->GetWorldPosition();
-		// 座標AとBの距離を求める
-		float length = Length(posA, posB);
-		// 球と球の交差判定
-		if (length <= pow(bullet->GetRadius() + enemy_->GetRadius(), 2)) {
-			// 自弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
-			// 敵キャラの衝突字コールバックを呼び出す
-			enemy_->OnCollision();
-		}
+		// ペアの衝突判定
+		CheckCollisionPair(enemy_, bullet);
 	}
 
 #pragma endregion
@@ -182,20 +158,25 @@ void GameScene::CheckAllCollision() {
 	// 自弾と敵キャラ全ての当たり判定
 	for (PlayerBullet* pbullet : playerBullets) {
 		for (EnemyBullet* ebullet : enemyBullets) {
-			// 自弾の座標
-			posA = pbullet->GetWorldPosition();
-			// 敵弾の座標
-			posB = ebullet->GetWorldPosition();
-			// 座標AとBの距離を求める
-			float length = Length(posA, posB);
-			// 球と球の交差判定
-			if (length <= pow(pbullet->GetRadius() + ebullet->GetRadius(), 2)) {
-				// 自弾の衝突時コールバックを呼び出す
-				pbullet->OnCollision();
-				// 敵キャラの衝突字コールバックを呼び出す
-				ebullet->OnCollision();
-			}
+			// ペアの衝突判定
+			CheckCollisionPair(pbullet, ebullet);
 		}
 	}
 #pragma endregion
+}
+
+void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+	Vector3 posA, posB;
+	// Aの座標
+	posA = colliderA->GetWorldPosition();
+	// Bの座標
+	posB = colliderB->GetWorldPosition();
+	// 座標AとBの距離を求める
+	float length = Length(posA, posB);
+	// 球と球の交差判定
+	if (length <= pow(colliderA->GetRadius() + colliderB->GetRadius(), 2)) {
+		// 衝突時コールバックを呼び出す
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
 }

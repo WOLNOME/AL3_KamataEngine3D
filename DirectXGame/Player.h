@@ -11,7 +11,7 @@
 
 //関数
 
-class Player {
+class Player:public Collider {
 public:
 
 	~Player();
@@ -35,11 +35,11 @@ public://関数
 	void Attack();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision()override;
 
 public://ゲッター
 	//ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition()override;
 	//弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 半径
