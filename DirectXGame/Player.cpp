@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Function.h"
 #include "ImGuiManager.h"
+#include "CollisionConfig.h"
 #include <cassert>
 
 Player::~Player() {
@@ -18,6 +19,10 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
+	//衝突属性を設定(自分の属性)
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	//衝突対象を自分の属性以外に設定(相手の属性)
+	SetCollisionMask(kCollisionAttributeEnemy);
 }
 
 void Player::Update() {

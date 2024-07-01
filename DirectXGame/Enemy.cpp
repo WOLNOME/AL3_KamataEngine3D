@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include "Player.h"
+#include "CollisionConfig.h"
 
 Enemy::~Enemy() {
 	// 解放
@@ -22,6 +23,10 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 
 	// 接近フェーズ初期化
 	ApproachInitialize();
+	// 衝突属性を設定(自分の属性)
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+	// 衝突対象を自分の属性以外に設定(相手の属性)
+	SetCollisionMask(kCollisionAttributePlayer);
 }
 
 // フェーズの関数テーブル

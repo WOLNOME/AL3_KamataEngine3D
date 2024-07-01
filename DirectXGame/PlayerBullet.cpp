@@ -2,6 +2,7 @@
 #include<cassert>
 #include "TextureManager.h"
 #include "Function.h"
+#include "CollisionConfig.h"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3 & velocity) {
 	//NULLポインタチェック
@@ -16,7 +17,10 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector
 	worldTransform_.translation_ = position;
 	//速度初期化
 	velocity_ = velocity;
-
+	// 衝突属性を設定(自分の属性)
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	// 衝突対象を自分の属性以外に設定(相手の属性)
+	SetCollisionMask(kCollisionAttributeEnemy);
 }
 
 void PlayerBullet::Update() {
