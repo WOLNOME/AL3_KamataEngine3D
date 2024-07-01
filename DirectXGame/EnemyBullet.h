@@ -1,13 +1,12 @@
 #pragma once
 #include "Model.h"
-#include "WorldTransform.h"
 #include "Player.h"
+#include "WorldTransform.h"
 
 class Player;
 
 class EnemyBullet {
 public:
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -26,12 +25,13 @@ public: // 関数
 
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
-public://ゲッター
+
+public: // ゲッター
 	Vector3 GetWorldPosition();
 	// 半径
 	float GetRadius() { return rad_; };
 
-public://セッター
+public: // セッター
 	void SetPlayer(Player* player) { player_ = player; }
 
 private:
@@ -43,7 +43,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	// 移動ベクトル
 	Vector3 velocity_;
-	//スピード
+	// スピード
 	float speed_ = 1.0f;
 	// 寿命
 	static const int32_t kLifeTime = 60 * 5;
@@ -51,9 +51,9 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
-	//半径
+	// 半径
 	const float rad_ = 1.0f;
 
-	//プレイヤー
+	// プレイヤー
 	Player* player_ = nullptr;
 };

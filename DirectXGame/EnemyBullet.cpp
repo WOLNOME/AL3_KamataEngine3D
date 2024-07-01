@@ -41,12 +41,12 @@ void EnemyBullet::Update() {
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	Vector3 toPlayer = Subtract(player_->GetTranslation(), worldTransform_.translation_);
 	// ベクトルを正規化する
-	Normalize2(toPlayer);
-	Normalize2(velocity_);
+	toPlayer = Normalize2(toPlayer);
+	velocity_ = Normalize2(velocity_);
 	// 球面線形補完により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
-	velocity_ = Multiply(speed_, Slerp(velocity_, toPlayer, 0.2f));
-	//進行方向に見た目の回転を合わせる
-	//  y軸周りの角度(θy)
+	velocity_ = Multiply(speed_, Normalize2(Slerp(velocity_, toPlayer, 0.05f)));
+	// 進行方向に見た目の回転を合わせる
+	//   y軸周りの角度(θy)
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(-worldTransform_.rotation_.y);
 	Vector3 velocityZ = Transform(velocity_, rotateYMatrix);

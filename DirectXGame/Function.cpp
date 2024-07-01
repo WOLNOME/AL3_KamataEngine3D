@@ -47,7 +47,7 @@ float Length2(const Vector3& v) {
 	return c;
 }
 
-float Length2(const Vector2& v) { 
+float Length2(const Vector2& v) {
 	float c;
 	c = sqrtf(powf(v.x, 2) + powf(v.y, 2));
 	return c;
@@ -223,28 +223,46 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
 	return p;
 }
 
+float Lerp(const float& l1, const float& l2, float t) {
+	float p;
+	p = (1 - t) * l1 + t * l2;
+	return p;
+}
+
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
-	Vector3 result;
-	//各ベクトルを正規化
+	// 各ベクトルを正規化
 	Vector3 v1n, v2n;
 	v1n = Normalize2(v1);
 	v2n = Normalize2(v2);
-	//内積を求める→cosθ
+	// 内積を求める→cosθ
 	float dot = Dot(v1n, v2n);
-	//sinθを求める
+	// sinθを求める
 	if (dot > 1.0f) {
 		dot = 1.0f;
 	}
-	//アークコサインでθの角度を求める
+	// アークコサインでθの角度を求める
 	float theta = std::acos(dot);
-	//シータの角度からsinθを求める
+	// シータの角度からsinθを求める
 	float sinTheta = std::sin(theta);
-	//サイン(θ(1-t))を求める
+	// サイン(θ(1-t))を求める
 	float sinThetaFrom = std::sin((1 - t) * theta);
-	//sinθtを求める
+	// sinθtを求める
 	float sinThetaTo = std::sin(t * theta);
-	//球面線形補完したベクトル(単位ベクトル)
-	Vector3 nvec = sinThetaFrom / sinTheta * v1n + sinThetaTo / sinTheta * v2n;
+	// 球面線形補完したベクトル(単位ベクトル)
+	Vector3 nvec = Add(Multiply(sinThetaFrom / sinTheta, v1n), Multiply(sinThetaTo / sinTheta, v2n));
+	// ゼロ除算を防ぐ
+	if (sinTheta < 1.0e-5) {
+		nvec = v1n;
+	} else {
+		// 球面線形補完したベクトル
+		nvec = Multiply(1 / sinTheta, nvec);
+	}
+	// ベクトルの長さはv1とv2の長さを線形補完
+	float length1 = Length2(v1);
+	float length2 = Length2(v2);
+	// Lerpで補完ベクトルの長さを求める
+	float length = Lerp(length1, length2, t);
 
-	return result;
+	// 長さを反映
+	return Multiply(length, nvec);
 }

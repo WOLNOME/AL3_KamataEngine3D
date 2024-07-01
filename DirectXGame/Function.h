@@ -22,4 +22,5 @@ Vector3 Multiply(const float& s, const Vector3& v);
 float Dot(const Vector3& v1, const Vector3& v2);
 float Dot2(const Vector2& v1, const Vector2& v2);
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+float Lerp(const float& l1, const float& l2, float t);
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
