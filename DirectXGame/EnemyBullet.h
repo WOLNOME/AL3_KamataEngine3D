@@ -1,12 +1,11 @@
 #pragma once
-#include "Collider.h"
 #include "Model.h"
 #include "Player.h"
 #include "WorldTransform.h"
 
 class Player;
 
-class EnemyBullet : public Collider {
+class EnemyBullet {
 public:
 	/// <summary>
 	/// 初期化
@@ -25,10 +24,10 @@ public: // 関数
 	bool isDead() const { return isDead_; }
 
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision() override;
+	void OnCollision();
 
 public: // ゲッター
-	Vector3 GetWorldPosition() override;
+	Vector3 GetWorldPosition();
 	// 半径
 	float GetRadius() { return rad_; };
 
