@@ -139,6 +139,7 @@ void GameScene::CheckAllCollision() {
 	// コライダーをリストに登録
 	colliders_.push_back(player_);
 	colliders_.push_back(enemy_);
+	//自弾全てについて
 	for (PlayerBullet* pbullet : playerBullets) {
 		colliders_.push_back(pbullet);
 	}
@@ -158,7 +159,8 @@ void GameScene::CheckAllCollision() {
 			// イテレーターBからコライダーBを取得する
 			Collider* colliderB = *itrB;
 			// 衝突フィルタリング
-			if ((colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask()) ||
+			if (
+				(colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask()) ||
 				(colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask())
 				) {
 				return;
