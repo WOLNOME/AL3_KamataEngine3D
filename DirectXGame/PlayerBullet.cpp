@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "Function.h"
 #include "CollisionConfig.h"
+#include "iostream"
 
 void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3 & velocity) {
 	//NULLポインタチェック
@@ -39,6 +40,7 @@ void PlayerBullet::Update() {
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 	//モデルの描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
 }
 
 void PlayerBullet::OnCollision() { isDead_ = true; }

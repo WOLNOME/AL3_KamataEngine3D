@@ -139,7 +139,7 @@ void Player::Attack() {
 		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		// 弾を登録する
-		bullets_.push_back(newBullet);
+ 		bullets_.push_back(newBullet);
 	}
 }
 

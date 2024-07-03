@@ -16,7 +16,7 @@ enum class Phase {
 /// <summary>
 /// 敵
 /// </summary>
-class Enemy:public Collider {
+class Enemy : public Collider {
 public:
 	~Enemy();
 	/// <summary>
@@ -32,7 +32,7 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
-public://関数
+public: // 関数
 	// 接近フェーズの更新関数
 	void ApproachUpdate();
 
@@ -46,16 +46,15 @@ public://関数
 	void Fire();
 
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision()override;
-
+	void OnCollision() override;
 
 public: // セッター
 	void SetPlayer(Player* player) { player_ = player; }
 
-public: //ゲッター
+public: // ゲッター
 	Vector3 GetWorldPosition() override;
 
-	//弾リストを取得
+	// 弾リストを取得
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 	// 半径
 	float GetRadius() { return rad_; };
@@ -63,7 +62,6 @@ public: //ゲッター
 public:
 	// 発射時間
 	static const int kFireInterval = 60;
-
 
 private:
 	// ワールド変換データ
@@ -78,7 +76,7 @@ private:
 	Phase phase_ = Phase::Approach;
 	// 弾
 	std::list<EnemyBullet*> bullets_;
-	//弾の速度
+	// 弾の速度
 	const float bulletSpeed_ = 1.0f;
 	// 発射タイマー
 	int32_t fireTimer_ = 0;

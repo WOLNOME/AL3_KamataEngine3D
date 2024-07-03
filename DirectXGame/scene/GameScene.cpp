@@ -143,6 +143,7 @@ void GameScene::CheckAllCollision() {
 	for (PlayerBullet* pbullet : playerBullets) {
 		colliders_.push_back(pbullet);
 	}
+	//敵弾全てについて
 	for (EnemyBullet* ebullet : enemyBullets) {
 		colliders_.push_back(ebullet);
 	}
@@ -150,9 +151,9 @@ void GameScene::CheckAllCollision() {
 	// リスト内のペアを総当たり
 	std::list<Collider*>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
-		// イテレーターAからコライダーAを取得する
+		// イテレータAからコライダーAを取得する
 		Collider* colliderA = *itrA;
-		// イテレーターBはイテレーターAの次の要素から回す
+		// イテレータBはイテレーターAの次の要素から回す
 		std::list<Collider*>::iterator itrB = itrA;
 		itrB++;
 		for (; itrB != colliders_.end(); ++itrB) {
@@ -160,10 +161,10 @@ void GameScene::CheckAllCollision() {
 			Collider* colliderB = *itrB;
 			// 衝突フィルタリング
 			if (
-				(colliderA->GetCollisionAttribute() != colliderB->GetCollisionMask()) ||
-				(colliderB->GetCollisionAttribute() != colliderA->GetCollisionMask())
+				!(colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) ||
+				!(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask())
 				) {
-				return;
+				continue;
 			}
 			// ペアの当たり判定
 			CheckCollisionPair(colliderA, colliderB);
@@ -180,7 +181,7 @@ void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	// 座標AとBの距離を求める
 	float length = Length(posA, posB);
 	// 球と球の交差判定
-	if (length <= pow(colliderA->GetRadius() + colliderB->GetRadius(), 2)) {
+	if (length <= (colliderA->GetRadius() + colliderB->GetRadius())) {
 		// 衝突時コールバックを呼び出す
 		colliderA->OnCollision();
 		colliderB->OnCollision();
