@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "DebugCamera.h"
+#include "CollisionManager.h"
 
 /// <summary>
 /// ゲームシーン
@@ -69,10 +70,10 @@ private: // メンバ変数
 	bool isDebugCameraActive_ = false;
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
+	//衝突マネージャー
+	CollisionManager* collisionManager_ = nullptr;
 
 private:
-	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
-
 
 	/// <summary>
 	/// ゲームシーン用
