@@ -202,3 +202,11 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 
 	return c;
 }
+
+Vector3 Multiply(const float& s, const Vector3& v) {
+	Vector3 c;
+	c.x = s * v.x;
+	c.y = s * v.y;
+	c.z = s * v.z;
+	return c;
+}

@@ -1,6 +1,7 @@
 #pragma once
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <vector>
 
 class RailCamera {
 public:
@@ -12,14 +13,25 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
 
-public://ゲッター
+public: // ゲッター
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	const WorldTransform& GetWorldTransform() { return worldTransForm_; }
+
+public: // 関数
+	Vector3 CatmullRom(const std::vector<Vector3> controlPoints,const float t);
 
 private:
 	// ワールド変換データ
 	WorldTransform worldTransForm_;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
+	// スプライン曲線制御点
+	std::vector<Vector3> controlPoints_;
+	// 線分で描画するようの頂点リスト
+	std::vector<Vector3> pointsDrawing;
 };

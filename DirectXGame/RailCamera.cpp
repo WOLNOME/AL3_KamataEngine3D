@@ -9,6 +9,24 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& radian) {
 	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
+	// スプライン曲線の制御点(通過点)
+	controlPoints_ = {
+	    {0,  0,  0},
+        {10, 10, 0},
+        {10, 15, 0},
+        {20, 15, 0},
+        {20, 0,  0},
+        {30, 0,  0}
+    };
+	// 線分の数
+	const size_t segmentCount = 100;
+	// 線分の数+1個分の頂点座標を計算
+	for (size_t i = 0; i < segmentCount + 1; i++) {
+		float t = 1.0f / segmentCount * i;
+		Vector3 pos = CatmullRom(controlPoints_, t);
+		// 描画用頂点リストに追加
+		pointsDrawing.push_back(pos);
+	}
 }
 
 void RailCamera::Update() {
@@ -28,4 +46,25 @@ void RailCamera::Update() {
 	ImGui::DragFloat3("translation", &worldTransForm_.translation_.x, 0.01f);
 	ImGui::DragFloat3("rotation", &worldTransForm_.rotation_.x, 0.01f);
 	ImGui::End();
+}
+
+void RailCamera::Draw() {
+	// 曲線描画
+	std::vector<Vector3>::iterator itrA = pointsDrawing.begin();
+	for (; itrA != pointsDrawing.end(); ++itrA) {
+		Vector3 pointA = *itrA;
+		std::vector<Vector3>::iterator itrB = itrA;
+		itrB++;
+		Vector3 pointB = *itrB;
+		//ライン描画
+		
+	}
+}
+
+Vector3 RailCamera::CatmullRom(const std::vector<Vector3> controlPoints, const float t) {
+	Vector3 result = {0, 0, 0};
+	for (size_t i = 0; i < controlPoints.size(); i++) {
+		result = Add(result, Multiply(powf(t, float((controlPoints.size() - 1) - i)), controlPoints.at(i)));
+	}
+	return result;
 }
