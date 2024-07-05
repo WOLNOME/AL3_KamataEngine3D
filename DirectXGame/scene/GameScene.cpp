@@ -2,6 +2,7 @@
 #include "AxisIndicator.h"
 #include "Function.h"
 #include "TextureManager.h"
+#include "PrimitiveDrawer.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -29,6 +30,9 @@ void GameScene::Initialize() {
 	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
+	// ライン描画前準備
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+
 	// 自キャラの生成
 	player_ = new Player();
 	// 敵キャラの生成
@@ -136,6 +140,8 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
+	// レールカメララインの描画
+	railCamera_->Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画

@@ -22,9 +22,6 @@ public: // ゲッター
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	const WorldTransform& GetWorldTransform() { return worldTransForm_; }
 
-public: // 関数
-	Vector3 CatmullRom(const std::vector<Vector3> controlPoints,const float t);
-
 private:
 	// ワールド変換データ
 	WorldTransform worldTransForm_;

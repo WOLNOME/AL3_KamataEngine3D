@@ -1,5 +1,8 @@
 #include "RailCamera.h"
+#include "DirectXCommon.h"
 #include "Function.h"
+#include "PrimitiveDrawer.h"
+#include <algorithm>
 #include <imgui.h>
 
 void RailCamera::Initialize(const Vector3& position, const Vector3& radian) {
@@ -23,7 +26,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& radian) {
 	// 線分の数+1個分の頂点座標を計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {
 		float t = 1.0f / segmentCount * i;
-		Vector3 pos = CatmullRom(controlPoints_, t);
+		Vector3 pos = CatmullRomPosition(controlPoints_, t);
 		// 描画用頂点リストに追加
 		pointsDrawing.push_back(pos);
 	}
@@ -51,20 +54,12 @@ void RailCamera::Update() {
 void RailCamera::Draw() {
 	// 曲線描画
 	std::vector<Vector3>::iterator itrA = pointsDrawing.begin();
-	for (; itrA != pointsDrawing.end(); ++itrA) {
+	for (; itrA != pointsDrawing.end() - 1; ++itrA) {
 		Vector3 pointA = *itrA;
 		std::vector<Vector3>::iterator itrB = itrA;
 		itrB++;
 		Vector3 pointB = *itrB;
-		//ライン描画
-		
+		// ライン描画
+		PrimitiveDrawer::GetInstance()->DrawLine3d(pointA, pointB, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 	}
-}
-
-Vector3 RailCamera::CatmullRom(const std::vector<Vector3> controlPoints, const float t) {
-	Vector3 result = {0, 0, 0};
-	for (size_t i = 0; i < controlPoints.size(); i++) {
-		result = Add(result, Multiply(powf(t, float((controlPoints.size() - 1) - i)), controlPoints.at(i)));
-	}
-	return result;
 }
