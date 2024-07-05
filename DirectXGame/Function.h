@@ -19,3 +19,4 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 Vector3 Multiply(const float& s, const Vector3& v);
 Vector3 CatmullRomInterpolation(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 Vector3 CatmullRomPosition(const std::vector<Vector3>& points, const float t);
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
