@@ -271,3 +271,30 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	c.m[3][3] = 1;
 	return c;
 }
+
+Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t) {
+	Vector2 result;
+	result = Add(v1, Multiply(t, Subtract(v2, v1)));
+	return result;
+}
+
+Vector2 Multiply(const float& s, const Vector2& v) { 
+	Vector2 c;
+	c.x = s * v.x;
+	c.y = s * v.y;
+	return c;
+}
+
+Vector2 Add(const Vector2& v1, const Vector2& v2) {
+	Vector2 c;
+	c.x = v1.x + v2.x;
+	c.y = v1.y + v2.y;
+	return c;
+}
+
+Vector2 Subtract(const Vector2& v1, const Vector2& v2) {
+	Vector2 c;
+	c.x = v1.x - v2.x;
+	c.y = v1.y - v2.y;
+	return c;
+}

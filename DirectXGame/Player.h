@@ -39,13 +39,13 @@ public: // 関数
 	/// <summary>
 	/// 攻撃
 	/// </summary>
-	void Attack();
+	void Attack(const Vector3& lockOnEnemyPos);
 
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
 	// ロックオンに関する関数
-	void LockOnProcess(Vector2& positionReticle2D, const Matrix4x4& viewProjectionViewportMatrix);
+	void LockOnProcess(Vector2& positionReticle2D, const Vector3& positionReticle3D, const Matrix4x4& viewProjectionViewportMatrix);
 
 public: // ゲッター
 	// ワールド座標を取得
@@ -80,15 +80,16 @@ private:
 	const float rad_ = 1.0f;
 	// ロックオンの強さ(値が高いほど吸引力高め)
 	const float kLockOnStrength = 10;
-	//ロックオン中かどうかの判定
+	// ロックオン中かどうかの判定
 	bool isLockOn = false;
-	//前フレームでロックオンしていたかの判定
+	// 前フレームでロックオンしていたかの判定
 	bool isPreLockOn = false;
-	//ラープ関連
+	// ラープ関連
 	int t = 0;
 	Vector2 positionResticleBefore2D = {0.0f, 0.0f};
-	bool isLerp = false;//ラープ中か
-	//ロックオン外れる際に元に戻る時間(フレーム)
+	Vector2 positionResticleAfter2D = {0.0f, 0.0f};
+	bool isLerp = false; // ラープ中か
+	// ロックオン外れる際に元に戻る時間(フレーム)
 	const int kBackTime = 10;
 
 	// ゲームシーン

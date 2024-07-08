@@ -40,7 +40,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	Vector3 move = {0, 0, 0};
 
 	// キャラクターの移動速さ
-	const float kCharacterSpeed = 0.2f;
+	const float kCharacterSpeed = 0.3f;
 
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_LEFT)) {
@@ -71,9 +71,6 @@ void Player::Update(ViewProjection& viewProjection) {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	// 攻撃処理
-	Attack();
-
 	/// 自機のワールド座標から3Dレティクルのワールド座標を計算
 	// 自機から3Dレティクルへの距離
 	const float kDistancePlayerTo3DReticle = 50.0f;
@@ -96,7 +93,7 @@ void Player::Update(ViewProjection& viewProjection) {
 	positionReticle3D = Transform(positionReticle3D, matViewProjectionViewport);
 	Vector2 positionReticle2D = {positionReticle3D.x, positionReticle3D.y};
 	//ロックオン処理
-	LockOnProcess(positionReticle2D, matViewProjectionViewport);
+	LockOnProcess(positionReticle2D, positionReticle3D, matViewProjectionViewport);
 	// スプライトのレティクルに座標設定
 	sprite2DReticle_->SetPosition(positionReticle2D);
 
@@ -129,7 +126,7 @@ void Player::DrawUI() {
 	sprite2DReticle_->Draw();
 }
 
-void Player::Attack() {
+void Player::Attack(const Vector3& lockOnEnemyPos) {
 	// 弾発射
 	if (input_->TriggerKey(DIK_SPACE)) {
 
@@ -138,7 +135,14 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = Subtract(worldTransform3DReticle_.translation_, worldTransform_.translation_);
+		if (!isLockOn) {
+			//ロックオンしていないなら
+			velocity = Subtract(worldTransform3DReticle_.translation_, worldTransform_.translation_);
+		} 
+		else {
+			//ロックオンしていたら
+			velocity = Subtract(lockOnEnemyPos, worldTransform_.translation_);
+		}
 		velocity = Multiply(kBulletSpeed, Normalize(velocity));
 
 		// 弾を生成し、初期化
@@ -152,74 +156,90 @@ void Player::Attack() {
 
 void Player::OnCollision() {}
 
-void Player::LockOnProcess(Vector2& positionReticle2D, const Matrix4x4& viewProjectionViewportMatrix) {
-	// 敵のワールド座標を得る
-	std::list<Enemy*> enemies = gameScene_->GetEnemies();
-	std::vector<Vector3> worldEnemyPos;
-	size_t i = 0;
-	for (Enemy* enemy : enemies) {
-		worldEnemyPos.at(i) = enemy->GetWorldPosition();
-		i++;
-	}
-	i = 0;
-	// 得たワールド座標をスクリーン座標に変換する
-	std::vector<Vector3> screenEnemyPos3D;
-	std::vector<Vector2> screenEnemyPos2D;
-	for (Vector3 wep : worldEnemyPos) {
-		screenEnemyPos3D.at(i) = Transform(wep, viewProjectionViewportMatrix);
-		screenEnemyPos2D.at(i) = {screenEnemyPos3D.at(i).x, screenEnemyPos3D.at(i).y};
-		i++;
-	}
-	i = 0;
-	//2Dレティクルの位置と敵のスクリーン座標の位置から距離をそれぞれ求める
-	std::vector<float> lengths;
-	for (Vector2 sep : screenEnemyPos2D) {
-		lengths.at(i) = Length(sep, positionReticle2D);
-		i++;
-	}
-	i = 0;
-	//求めたlengthから最も距離の短いlengthのindexを求める
-	size_t minIndex = std::distance(lengths.begin(), std::min_element(lengths.begin(), lengths.end()));
-	//求めたindexに当てはまるlengthをロックオンの範囲と計算
-	if (lengths.at(minIndex) < kLockOnStrength) {
-		//ロックオン！
-		isLockOn = true;
-	} else {
-		//ロックオンしない
-		isLockOn = false;
-	}
-	//もしロックオン成功したら
-	if (isLockOn) {
-		//2Dレティクルを敵の座標に更新
-		positionReticle2D = screenEnemyPos2D.at(minIndex);
-		//色を変更
-		sprite2DReticle_->SetColor(Vector4(1.0f, 0.0f, 0.0, 1.0f));
-
-
-
-		//最後にisPreLockOnの更新
-		isPreLockOn = true;
-
-	} else {
-		//色をそのままor元に戻す
-		sprite2DReticle_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		//前フレームでロックオン状態なら
-		if (isPreLockOn) {
-			//ラープフラグオン
-			isLerp = true;
-			//2Dレティクルの位置を保存
-			positionResticleBefore2D = positionReticle2D;
+void Player::LockOnProcess(Vector2& positionReticle2D, const Vector3& positionReticle3D, const Matrix4x4& viewProjectionViewportMatrix) {
+	//ラープ中は以下の処理を行わない
+	if(!isLerp) {
+		// 敵のワールド座標を得る
+		std::list<Enemy*> enemies;
+	    // もしenemyが空ならreturn
+	    if (enemies.size() == 0) {
+		    return;
+	    }
+		std::vector<Vector3> worldEnemyPos;
+		size_t i = 0;
+		for (Enemy* enemy : enemies) {
+			worldEnemyPos.at(i) = enemy->GetWorldPosition();
+			i++;
 		}
+		i = 0;
+		// 得たワールド座標をスクリーン座標に変換する
+		std::vector<Vector3> screenEnemyPos3D;
+		std::vector<Vector2> screenEnemyPos2D;
+		for (Vector3 wep : worldEnemyPos) {
+			screenEnemyPos3D.at(i) = Transform(wep, viewProjectionViewportMatrix);
+			screenEnemyPos2D.at(i) = {screenEnemyPos3D.at(i).x, screenEnemyPos3D.at(i).y};
+			i++;
+		}
+		i = 0;
+		// 2Dレティクルの位置と敵のスクリーン座標の位置から距離をそれぞれ求める
+		std::vector<float> lengths;
+		for (Vector2 sep : screenEnemyPos2D) {
+			//参照している値がpositionReticle2D→ロックオンしたら常に同じ敵を追い続ける
+			lengths.at(i) = Length(sep, positionReticle2D);
+			i++;
+		}
+		i = 0;
+		// 求めたlengthから最も距離の短いlengthのindexを求める
+		size_t minIndex = std::distance(lengths.begin(), std::min_element(lengths.begin(), lengths.end()));
+		// 求めたindexに当てはまるlengthをロックオンの範囲と計算
+		if (lengths.at(minIndex) < kLockOnStrength) {
+			// ロックオン！
+			isLockOn = true;
+		} else {
+			// ロックオンしない
+			isLockOn = false;
+		}
+		// もしロックオン成功したら
+		if (isLockOn) {
+			// 2Dレティクルを敵の座標に更新
+			positionReticle2D = screenEnemyPos2D.at(minIndex);
+			// 色を変更
+			sprite2DReticle_->SetColor(Vector4(1.0f, 0.0f, 0.0, 1.0f));
 
-		//最後にisPreLockOnの更新
-		isPreLockOn = false;
+			// 最後にisPreLockOnの更新
+			isPreLockOn = true;
+
+		} else {
+			// 色をそのままor元に戻す
+			sprite2DReticle_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			// 前フレームでロックオン状態なら
+			if (isPreLockOn) {
+				// ラープフラグオン
+				isLerp = true;
+				// ラープスタート地点
+				positionResticleBefore2D = positionReticle2D;
+				// ラープゴール地点
+				positionResticleAfter2D = {positionReticle3D.x, positionReticle3D.y};
+			}
+
+			// 最後にisPreLockOnの更新
+			isPreLockOn = false;
+		}
+		// 攻撃処理
+		Attack(worldEnemyPos.at(minIndex));
 	}
-	//ラープ処理
+	// ラープ処理
 	if (isLerp) {
-
+		positionReticle2D = Lerp(positionResticleBefore2D, positionResticleAfter2D, (float)t);
+		t++;
+		if (t >= kBackTime) {
+			t = 0;
+			isLerp = false;
+		}
+		// 攻撃処理
+		Attack(Vector3(0.0f, 0.0f, 0.0f));
 	}
-
-
+	
 }
 
 Vector3 Player::GetWorldPosition() {

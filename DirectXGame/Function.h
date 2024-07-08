@@ -23,3 +23,7 @@ Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 Matrix4x4 Inverse(const Matrix4x4& m);
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t);
+Vector2 Multiply(const float& s, const Vector2& v);
+Vector2 Add(const Vector2& v1, const Vector2& v2);
+Vector2 Subtract(const Vector2& v1, const Vector2& v2);
