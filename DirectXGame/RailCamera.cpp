@@ -44,11 +44,12 @@ void RailCamera::Update() {
 	// 視点を求める
 	float t1 = 1.0f / loopCount * ft;
 	eye = CatmullRomPosition(controlPoints_, t1);
-	// 注視点(5f後の点)を求める
-	float t2 = 1.0f / loopCount * (ft + 5);
-	if (ft + 5 > loopCount) {
+	// 注視点(nf後の点)を求める
+	const size_t nf = 200;
+	float t2 = 1.0f / loopCount * (ft + nf);
+	if (ft + nf > loopCount) {
 		// 5f後が存在しなかったら最初の点に戻る。
-		t2 = 1.0f / loopCount * ((ft + 5) - loopCount);
+		t2 = 1.0f / loopCount * ((ft + nf) - loopCount);
 	}
 	target = CatmullRomPosition(controlPoints_, t2);
 
