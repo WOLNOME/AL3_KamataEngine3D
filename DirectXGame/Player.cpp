@@ -86,17 +86,19 @@ void Player::Update(ViewProjection& viewProjection) {
 	// 3Dレティクルの座標を設定
 	worldTransform3DReticle_.translation_ = Add(worldTransform_.translation_, offset);
 
-	///3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
-	Vector3 positionReticle = worldTransform3DReticle_.translation_;
-	//ビューポート行列
+	/// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
+	Vector3 positionReticle3D = worldTransform3DReticle_.translation_;
+	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-	//ビュー行列とプロジェクション行列、ビューポート行列を合成する
+	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
 	Matrix4x4 matViewProjectionViewport = Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
-	//ワールド→スクリーン座標変換(ここで3Dから2Dになる)
-	positionReticle = Transform(positionReticle, matViewProjectionViewport);
-	//スプライトのレティクルに座標設定
-	sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
-
+	// ワールド→スクリーン座標変換(ここで3Dから2Dになる)
+	positionReticle3D = Transform(positionReticle3D, matViewProjectionViewport);
+	Vector2 positionReticle2D = {positionReticle3D.x, positionReticle3D.y};
+	//ロックオン処理
+	LockOnProcess(positionReticle2D, matViewProjectionViewport);
+	// スプライトのレティクルに座標設定
+	sprite2DReticle_->SetPosition(positionReticle2D);
 
 	// 3Dレティクル行列の更新
 	worldTransform3DReticle_.UpdateMatrix();
@@ -120,12 +122,10 @@ void Player::Update(ViewProjection& viewProjection) {
 	ImGui::End();
 }
 
-void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-}
+void Player::Draw(ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
 
 void Player::DrawUI() {
-	//2Dスプライト張る用
+	// 2Dスプライト張る用
 	sprite2DReticle_->Draw();
 }
 
@@ -151,6 +151,76 @@ void Player::Attack() {
 }
 
 void Player::OnCollision() {}
+
+void Player::LockOnProcess(Vector2& positionReticle2D, const Matrix4x4& viewProjectionViewportMatrix) {
+	// 敵のワールド座標を得る
+	std::list<Enemy*> enemies = gameScene_->GetEnemies();
+	std::vector<Vector3> worldEnemyPos;
+	size_t i = 0;
+	for (Enemy* enemy : enemies) {
+		worldEnemyPos.at(i) = enemy->GetWorldPosition();
+		i++;
+	}
+	i = 0;
+	// 得たワールド座標をスクリーン座標に変換する
+	std::vector<Vector3> screenEnemyPos3D;
+	std::vector<Vector2> screenEnemyPos2D;
+	for (Vector3 wep : worldEnemyPos) {
+		screenEnemyPos3D.at(i) = Transform(wep, viewProjectionViewportMatrix);
+		screenEnemyPos2D.at(i) = {screenEnemyPos3D.at(i).x, screenEnemyPos3D.at(i).y};
+		i++;
+	}
+	i = 0;
+	//2Dレティクルの位置と敵のスクリーン座標の位置から距離をそれぞれ求める
+	std::vector<float> lengths;
+	for (Vector2 sep : screenEnemyPos2D) {
+		lengths.at(i) = Length(sep, positionReticle2D);
+		i++;
+	}
+	i = 0;
+	//求めたlengthから最も距離の短いlengthのindexを求める
+	size_t minIndex = std::distance(lengths.begin(), std::min_element(lengths.begin(), lengths.end()));
+	//求めたindexに当てはまるlengthをロックオンの範囲と計算
+	if (lengths.at(minIndex) < kLockOnStrength) {
+		//ロックオン！
+		isLockOn = true;
+	} else {
+		//ロックオンしない
+		isLockOn = false;
+	}
+	//もしロックオン成功したら
+	if (isLockOn) {
+		//2Dレティクルを敵の座標に更新
+		positionReticle2D = screenEnemyPos2D.at(minIndex);
+		//色を変更
+		sprite2DReticle_->SetColor(Vector4(1.0f, 0.0f, 0.0, 1.0f));
+
+
+
+		//最後にisPreLockOnの更新
+		isPreLockOn = true;
+
+	} else {
+		//色をそのままor元に戻す
+		sprite2DReticle_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		//前フレームでロックオン状態なら
+		if (isPreLockOn) {
+			//ラープフラグオン
+			isLerp = true;
+			//2Dレティクルの位置を保存
+			positionResticleBefore2D = positionReticle2D;
+		}
+
+		//最後にisPreLockOnの更新
+		isPreLockOn = false;
+	}
+	//ラープ処理
+	if (isLerp) {
+
+	}
+
+
+}
 
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;

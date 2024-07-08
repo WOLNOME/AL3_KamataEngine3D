@@ -1,28 +1,27 @@
 #pragma once
-#include "Model.h"
-#include "WorldTransform.h"
-#include "Sprite.h"
 #include "Input.h"
+#include "Model.h"
 #include "PlayerBullet.h"
+#include "Sprite.h"
+#include "WorldTransform.h"
 #include <list>
 
-//前方宣言
+// 前方宣言
 class GameScene;
 
 /// <summary>
 /// 自キャラ
 /// </summary>
 
-//関数
+// 関数
 
 class Player {
 public:
-
 	~Player();
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle ,const Vector3& position);
+	void Initialize(Model* model, uint32_t textureHandle, const Vector3& position);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -36,24 +35,25 @@ public:
 	/// </summary>
 	void DrawUI();
 
-public://関数
+public: // 関数
 	/// <summary>
 	/// 攻撃
 	/// </summary>
 	void Attack();
 
-	//衝突を検出したら呼び出されるコールバック関数
+	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
-	
+	// ロックオンに関する関数
+	void LockOnProcess(Vector2& positionReticle2D, const Matrix4x4& viewProjectionViewportMatrix);
 
 public: // ゲッター
-	//ワールド座標を取得
+	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 	// 半径
 	float GetRadius() { return rad_; };
 
-public://セッター
+public: // セッター
 	/// <summary>
 	/// 親となるワールドトランスフォームをセット
 	/// </summary>
@@ -62,24 +62,35 @@ public://セッター
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 private:
-	//ワールド変換データ
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	//3Dレティクル用ワールドトランスフォーム
+	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticle_;
-	//モデル
+	// モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	//2Dレティクル用スプライト
+	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
-	//キーボード入力
+	// キーボード入力
 	Input* input_ = nullptr;
-	//デバッグテキスト
-	float inputFloat3[3] = {0,0,0};
+	// デバッグテキスト
+	float inputFloat3[3] = {0, 0, 0};
 	// 半径
 	const float rad_ = 1.0f;
+	// ロックオンの強さ(値が高いほど吸引力高め)
+	const float kLockOnStrength = 10;
+	//ロックオン中かどうかの判定
+	bool isLockOn = false;
+	//前フレームでロックオンしていたかの判定
+	bool isPreLockOn = false;
+	//ラープ関連
+	int t = 0;
+	Vector2 positionResticleBefore2D = {0.0f, 0.0f};
+	bool isLerp = false;//ラープ中か
+	//ロックオン外れる際に元に戻る時間(フレーム)
+	const int kBackTime = 10;
 
-	//ゲームシーン
+	// ゲームシーン
 	GameScene* gameScene_ = nullptr;
-
 };

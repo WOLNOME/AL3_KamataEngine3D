@@ -77,6 +77,9 @@ public: // 関数
 	/// <param name="position">発生座標</param>
 	void AppearEnemy(const Vector3 position);
 
+public://ゲッター
+	std::list<Enemy*> GetEnemies() { return enemies_; }
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
