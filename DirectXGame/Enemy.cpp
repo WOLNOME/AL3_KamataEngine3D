@@ -35,6 +35,7 @@ void Enemy::Update() {
 	//  メンバ関数ポインタに入っている関数を呼び出す
 	(this->*spFuncTable[static_cast<size_t>(phase_)])();
 
+	liveTimer_++;
 	
 }
 

@@ -58,6 +58,7 @@ public: // セッター
 
 public: //ゲッター
 	Vector3 GetWorldPosition();
+	int32_t GetLiveTimer() { return liveTimer_; }
 
 	// 半径
 	float GetRadius() { return rad_; };
@@ -93,6 +94,8 @@ private:
 	const float rad_ = 1.0f;
 	// デスフラグ
 	bool isDead_ = false;
+	//生存タイマー
+	int32_t liveTimer_ = 0;
 
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;

@@ -45,7 +45,7 @@ public: // 関数
 	void OnCollision();
 
 	// ロックオンに関する関数
-	void LockOnProcess(Vector2& positionReticle2D, const Vector3& positionReticle3D, const Matrix4x4& viewProjectionViewportMatrix);
+	void LockOnProcess(const Vector3& positionReticle3D, const Matrix4x4& viewProjectionViewportMatrix);
 
 public: // ゲッター
 	// ワールド座標を取得
@@ -72,6 +72,8 @@ private:
 	uint32_t textureHandle_ = 0u;
 	// 2Dレティクル用スプライト
 	Sprite* sprite2DReticle_ = nullptr;
+	// 2Dレティクルの座標
+	Vector2 positionReticle2D;
 	// キーボード入力
 	Input* input_ = nullptr;
 	// デバッグテキスト
@@ -79,18 +81,20 @@ private:
 	// 半径
 	const float rad_ = 1.0f;
 	// ロックオンの強さ(値が高いほど吸引力高め)
-	const float kLockOnStrength = 10;
+	const float kLockOnStrength = 30;
 	// ロックオン中かどうかの判定
 	bool isLockOn = false;
 	// 前フレームでロックオンしていたかの判定
 	bool isPreLockOn = false;
+	//最後にロックオンした敵の座標を保存
+	Vector2 positionLastLockOnEnemy2D = {0.0f, 0.0f};
 	// ラープ関連
 	int t = 0;
 	Vector2 positionResticleBefore2D = {0.0f, 0.0f};
 	Vector2 positionResticleAfter2D = {0.0f, 0.0f};
 	bool isLerp = false; // ラープ中か
 	// ロックオン外れる際に元に戻る時間(フレーム)
-	const int kBackTime = 10;
+	const int kBackTime = 20;
 
 	// ゲームシーン
 	GameScene* gameScene_ = nullptr;
