@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "RailCamera.h"
+#include "FPSCamera.h"
 #include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -110,6 +111,8 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	// レールカメラ
 	RailCamera* railCamera_ = nullptr;
+	//FPSカメラ
+	FPSCamera* fpsCamera_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

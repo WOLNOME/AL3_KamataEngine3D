@@ -29,7 +29,13 @@ void Player::Update(ViewProjection& viewProjection) {
 	/// 旋回処理
 	// 回転速さ
 	const float kRotSpeed = 0.02f;
-	// 押した方向で移動ベクトルを変更
+	// 押した方向で移動ベクトルを変更（上下）
+	if (input_->PushKey(DIK_W)) {
+		worldTransform_.rotation_.x -= kRotSpeed;
+	} else if (input_->PushKey(DIK_S)) {
+		worldTransform_.rotation_.x += kRotSpeed;
+	}
+	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
 		worldTransform_.rotation_.y -= kRotSpeed;
 	} else if (input_->PushKey(DIK_D)) {

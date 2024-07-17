@@ -50,6 +50,11 @@ public: // 関数
 public: // ゲッター
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
+	//ローカル座標を取得
+	Vector3 GetLocalPosition() { return worldTransform_.translation_; }
+	//ローカル回転を取得
+	Vector3 GetLocalRotation() { return worldTransform_.rotation_; };
+
 	// 半径
 	float GetRadius() { return rad_; };
 

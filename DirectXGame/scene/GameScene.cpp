@@ -16,6 +16,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete debugCamera_;
 	delete railCamera_;
+	delete fpsCamera_;
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
 	}
@@ -45,7 +46,7 @@ void GameScene::Initialize() {
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 自キャラの初期化
-	Vector3 playerPosition(0, 0, 20.0f);
+	Vector3 playerPosition(0, 0, 0);//←fpsだからカメラ原点
 	player_->Initialize(model_, textureHandle_, playerPosition);
 	// 自キャラにゲームシーンを渡す
 	player_->SetGameScene(this);
@@ -59,12 +60,18 @@ void GameScene::Initialize() {
 	railCamera_ = new RailCamera();
 	// レールカメラの初期化
 	railCamera_->Initialize({0.0f, 0.0f, -6.0f}, {0.0f, 0.0f, 0.0f});
+	//FPSカメラの生成
+	fpsCamera_ = new FPSCamera();
+	//FPSカメラの初期化
+	fpsCamera_->Initialize(playerPosition, {0.0f, 0.0f, 0.0f});
+	//FPSカメラ自機情報取得
+	fpsCamera_->SetPlayer(player_);
 	// 軸方向表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 	// 自キャラ(子)とレールカメラ(親)の親子関係を結ぶ
-	player_->SetParent(&railCamera_->GetWorldTransform());
+	player_->SetParent(&fpsCamera_->GetWorldTransform());
 
 	// ファイル読み込み
 	LoadEnemyPopData();
@@ -142,10 +149,10 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 
 	} else {
-		// レールカメラの更新
-		railCamera_->Update();
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		// FPSカメラの更新
+		fpsCamera_->Update();
+		viewProjection_.matView = fpsCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = fpsCamera_->GetViewProjection().matProjection;
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.TransferMatrix();
 	}
