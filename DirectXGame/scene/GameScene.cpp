@@ -64,8 +64,8 @@ void GameScene::Initialize() {
 	fpsCamera_ = new FPSCamera();
 	//FPSカメラの初期化
 	fpsCamera_->Initialize(playerPosition, {0.0f, 0.0f, 0.0f});
-	//FPSカメラ自機情報取得
-	fpsCamera_->SetPlayer(player_);
+	//自キャラにFPSカメラを渡す
+	player_->SetFPSCamera(fpsCamera_);
 	// 軸方向表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）

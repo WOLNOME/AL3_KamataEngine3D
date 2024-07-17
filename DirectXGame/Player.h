@@ -8,6 +8,7 @@
 
 // 前方宣言
 class GameScene;
+class FPSCamera;
 
 /// <summary>
 /// 自キャラ
@@ -65,6 +66,7 @@ public: // セッター
 	/// <param name="parent">親となるワールドトランスフォームをセット</param>
 	void SetParent(const WorldTransform* parent);
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	void SetFPSCamera(FPSCamera* fpsCamera) { fpsCamera_ = fpsCamera; }
 
 private:
 	// ワールド変換データ
@@ -86,4 +88,6 @@ private:
 
 	// ゲームシーン
 	GameScene* gameScene_ = nullptr;
+	//FPSカメラ
+	FPSCamera* fpsCamera_ = nullptr;
 };
