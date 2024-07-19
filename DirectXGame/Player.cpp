@@ -73,7 +73,7 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = Subtract(worldTransform3DReticle_.translation_, worldTransform_.translation_);
+		velocity = Subtract(worldTransform3DReticle_.translation_, GetWorldPosition());
 		velocity = Multiply(kBulletSpeed, Normalize(velocity));
 
 		// 弾を生成し、初期化
@@ -95,7 +95,7 @@ void Player::ScreenToWorldMouse(Matrix4x4 matViewport, ViewProjection& viewProje
 	//クライアントエリア座標(スクリーン座標)に変換する
 	HWND hwnd = WinApp::GetInstance()->GetHwnd();
 	ScreenToClient(hwnd, &mousePosition);
-	//マウス座標を2Dレティクルのスプライトに代入する
+	//マウス座標を2Dレティpクルのスプライトに代入する
 	sprite2DReticle_->SetPosition(Vector2((float)mousePosition.x, (float)mousePosition.y));
 	
 	//ビュープロジェクションビューポート合成行列
