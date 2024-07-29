@@ -22,12 +22,20 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	//自キャラの初期化
 	player_->Initialize(model_.get(),textureHandle_);
+	//天球の生成
+	skydome_ = std::make_unique<Skydome>();
+	//天球の初期化
+	skydome_->Initialize();
+
 
 }
 
 void GameScene::Update() {
 	//自キャラの更新
 	player_->Update();
+	//天球の更新
+	skydome_->Update();
+
 }
 
 void GameScene::Draw() {

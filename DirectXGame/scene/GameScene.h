@@ -9,6 +9,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Player.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,6 +56,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
+	//天球
+	std::unique_ptr<Skydome> skydome_ = nullptr;
 
 
 	/// <summary>
