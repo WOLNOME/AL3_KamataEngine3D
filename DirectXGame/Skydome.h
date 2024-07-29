@@ -5,14 +5,24 @@
 
 class Skydome {
 public:
-	void Initialize();
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize(Model* model, const Vector3& position);
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
-	void Draw();
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw(ViewProjection& viewProjection);
 
 private:
-	//ワールド変換データ
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
+	// モデル
+	Model* model_ = nullptr;
+
 
 };
