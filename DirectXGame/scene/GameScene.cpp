@@ -16,7 +16,7 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 3Dモデルの生成
 	model_.reset(Model::Create());
-	modelSkydome_.reset(Model::CreateFromOBJ("skydom", true));
+	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	// 自キャラの生成
@@ -27,6 +27,9 @@ void GameScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
 	skydome_->Initialize(model_.get(), {0.0f, 0.0f, 0.0f});
+	//デバッグカメラの生成
+	debugCamera_ = std::make_unique<DebugCamera>(WinApp::kWindowWidth, WinApp::kWindowHeight);
+
 }
 
 void GameScene::Update() {
@@ -34,6 +37,24 @@ void GameScene::Update() {
 	player_->Update();
 	// 天球の更新
 	skydome_->Update();
+
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_TAB)) {
+		isDebugCameraActive_ = !isDebugCameraActive_;
+	}
+#endif // _DEBUG
+	//カメラの処理
+	if (isDebugCameraActive_) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		//ビュープロジェクション行列の転送
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.UpdateMatrix();
+	}
+
 }
 
 void GameScene::Draw() {
@@ -65,6 +86,10 @@ void GameScene::Draw() {
 
 	// 自キャラの描画
 	player_->Draw(viewProjection_);
+
+
+	//天球の描画
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

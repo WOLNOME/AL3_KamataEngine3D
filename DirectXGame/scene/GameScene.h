@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "Skydome.h"
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -60,7 +61,9 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_ = nullptr;
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
-
+	//デバッグカメラ
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
 
 	/// <summary>
 	/// ゲームシーン用
