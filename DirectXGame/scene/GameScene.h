@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -48,12 +49,12 @@ private: // メンバ変数
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 	//3Dモデル
-	Model* model_ = nullptr;
+	std::unique_ptr<Model> model_ = nullptr;
 	//*ワールドトランスフォームは各オブジェクトが各々持つもの
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//自キャラ
-	Player* player_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 
 
 	/// <summary>
