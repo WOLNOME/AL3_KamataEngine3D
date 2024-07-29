@@ -51,6 +51,8 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	//3Dモデル
 	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Model> modelSkydome_ = nullptr;
+
 	//*ワールドトランスフォームは各オブジェクトが各々持つもの
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
