@@ -1,7 +1,7 @@
-#include "Player.h"
+#include "Ground.h"
 #include <cassert>
 
-void Player::Initialize(Model* model, const Vector3& position) {
+void Ground::Initialize(Model* model, const Vector3& position) {
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
@@ -10,12 +10,9 @@ void Player::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.translation_ = position;
 }
 
-void Player::Update() {
-	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
-}
+void Ground::Update() {}
 
-void Player::Draw(ViewProjection& viewProjection) {
+void Ground::Draw(ViewProjection& viewProjection) {
+	// 3Dモデルの描画
 	model_->Draw(worldTransform_, viewProjection);
-	
 }

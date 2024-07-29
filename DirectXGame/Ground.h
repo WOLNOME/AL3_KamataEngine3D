@@ -2,10 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
-/// <summary>
-/// 自キャラ
-/// </summary>
-class Player {
+class Ground {
 public:
 	/// <summary>
 	/// 初期化
@@ -21,10 +18,8 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 private:
-	//ワールド変換データ
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	//モデル
+	// モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
 };

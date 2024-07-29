@@ -11,6 +11,8 @@
 #include "Player.h"
 #include "Skydome.h"
 #include "DebugCamera.h"
+#include "AxisIndicator.h"
+#include "Ground.h"
 
 /// <summary>
 /// ゲームシーン
@@ -52,8 +54,9 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	//3Dモデル
 	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Model> modelPlayer_ = nullptr;
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
-
+	std::unique_ptr<Model> modelGround_ = nullptr;
 	//*ワールドトランスフォームは各オブジェクトが各々持つもの
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -64,6 +67,9 @@ private: // メンバ変数
 	//デバッグカメラ
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
 	bool isDebugCameraActive_ = false;
+	//地面
+	std::unique_ptr<Ground> ground_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用
