@@ -1,4 +1,5 @@
 #pragma once
+#include "Input.h"
 #include "Model.h"
 #include "WorldTransform.h"
 
@@ -10,7 +11,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(Model* model, const Vector3& position, Input* input);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -21,10 +22,12 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 private:
-	//ワールド変換データ
+	Input* input_ = nullptr;
+
+	// ワールド変換データ
 	WorldTransform worldTransform_;
-	//モデル
+	// モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 };

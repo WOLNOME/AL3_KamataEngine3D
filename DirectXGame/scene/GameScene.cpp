@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自キャラの初期化
-	player_->Initialize(modelPlayer_.get(), {0.0f, 0.0f, 0.0f});
+	player_->Initialize(modelPlayer_.get(), {0.0f, 0.0f, 0.0f},input_);
 	// 天球の生成
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
