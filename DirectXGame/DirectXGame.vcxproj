@@ -112,12 +112,12 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="new\WorldTransformEx.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="StageScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="WorldTransformEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />
