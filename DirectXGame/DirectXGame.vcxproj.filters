@@ -252,6 +252,5 @@
     <None Include="Resources\shaders\Terrain.hlsli">
       <Filter>シェーダー ファイル</Filter>
     </None>
-    <None Include="new\error.md" />
   </ItemGroup>
 </Project>
