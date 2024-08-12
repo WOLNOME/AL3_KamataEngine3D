@@ -14,10 +14,12 @@ void Player::Initialize(Model* model, const Vector3& position, Input* input) {
 
 void Player::Update() {
 	// 移動処理
-	if (input_->GetJoystickState())
+	//if (input_->GetJoystickState())
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 }
 
-void Player::Draw(ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection); }
+void Player::Draw(ViewProjection& viewProjection) { 
+	model_->Draw(worldTransform_, viewProjection);
+}
