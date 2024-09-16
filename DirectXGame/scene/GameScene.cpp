@@ -20,7 +20,7 @@ void GameScene::Initialize() {
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
 	// ビュープロジェクションの初期化
-	viewProjection_.farZ = 2000;
+	viewProjection_.farZ = 3000;
 	viewProjection_.Initialize();
 	// 軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -28,19 +28,31 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 	// デバッグカメラの生成
 	debugCamera_ = std::make_unique<DebugCamera>(WinApp::kWindowWidth, WinApp::kWindowHeight);
-	debugCamera_->SetFarZ(2000.0f);
+	debugCamera_->SetFarZ(3000.0f);
+	//追従カメラの生成
+	followCamera_=std::make_unique<FollowCamera>();
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
-	// 自キャラの初期化
-	player_->Initialize(modelPlayer_.get(), {0.0f, 0.0f, 0.0f},input_);
 	// 天球の生成
 	skydome_ = std::make_unique<Skydome>();
-	// 天球の初期化
-	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 天球の生成
 	ground_ = std::make_unique<Ground>();
+	
+	//自キャラのワールドトランスフォームをカメラにセット
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+
+	//追従カメラの初期化
+	followCamera_->Initialize(input_);
+	// 自キャラの初期化
+	player_->Initialize(modelPlayer_.get(), {0.0f, 0.0f, 0.0f},input_);
+	// 天球の初期化
+	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 天球の初期化
 	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
+
+	//カメラのビュープロジェクションを借りる
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
+
 }
 
 void GameScene::Update() {
@@ -64,7 +76,11 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
+		// 追従カメラの更新
+		followCamera_->Update();
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
 	}
 }
 

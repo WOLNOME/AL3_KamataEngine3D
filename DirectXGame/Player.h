@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
 
 /// <summary>
 /// 自キャラ
@@ -21,11 +22,19 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
+public:
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+public:
+	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection_ = viewProjection; }
+
 private:
 	Input* input_ = nullptr;
 
 	// ワールド変換データ
 	WorldTransform worldTransform_;
+	//カメラのビュープロジェクション
+	const ViewProjection* viewProjection_ = nullptr;
 	// モデル
 	Model* model_ = nullptr;
 	// テクスチャハンドル

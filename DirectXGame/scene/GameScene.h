@@ -13,6 +13,7 @@
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
 #include "Ground.h"
+#include "FollowCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -69,6 +70,8 @@ private: // メンバ変数
 	bool isDebugCameraActive_ = false;
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
+	//追従カメラ
+	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
 
 	/// <summary>
