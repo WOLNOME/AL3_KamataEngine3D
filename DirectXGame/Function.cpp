@@ -597,6 +597,22 @@ float Lerp(const float& l1, const float& l2, float t) {
 	return p;
 }
 
+float LerpShortAngle(float sRadian, float eRadian, float t) {
+	// 角度の差分を求める
+	float diff = eRadian - sRadian;
+	// 角度を{-2PI,+2PI}に補正する
+	diff = std::fmodf(diff, 2 * pi);
+
+	// 角度を{-PI,+PI}に補正する
+	if (diff > pi) {
+		diff -= 2 * pi;
+	} else if (diff < -pi) {
+		diff += 2 * pi;
+	}
+
+	return Lerp(sRadian, sRadian + (diff * t), t);
+}
+
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	// 各ベクトルを正規化
 	Vector3 v1n, v2n;

@@ -128,4 +128,6 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 float Lerp(const float& l1, const float& l2, float t);
 
+float LerpShortAngle(float sRadian, float eRadian, float t);
+
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
