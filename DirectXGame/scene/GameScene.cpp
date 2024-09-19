@@ -16,7 +16,10 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 3Dモデルの生成
 	model_.reset(Model::Create());
-	modelPlayer_.reset(Model::CreateFromOBJ("player", true));
+	modelFighterBody_.reset(Model::CreateFromOBJ("player_Body", true));
+	modelFighterHead_.reset(Model::CreateFromOBJ("player_Head", true));
+	modelFighterL_arm_.reset(Model::CreateFromOBJ("player_L_arm", true));
+	modelFighterR_arm_.reset(Model::CreateFromOBJ("player_R_arm", true));
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
 	// ビュープロジェクションの初期化
@@ -44,7 +47,7 @@ void GameScene::Initialize() {
 	//追従カメラの初期化
 	followCamera_->Initialize(input_);
 	// 自キャラの初期化
-	player_->Initialize(modelPlayer_.get(), {0.0f, 0.0f, 0.0f},input_);
+	player_->Initialize(modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(), modelFighterR_arm_.get(), {0.0f, 0.0f, 0.0f}, input_);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 天球の初期化
