@@ -9,6 +9,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Skydome.h"
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
@@ -59,6 +60,9 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelFighterHead_ = nullptr;
 	std::unique_ptr<Model> modelFighterL_arm_ = nullptr;
 	std::unique_ptr<Model> modelFighterR_arm_ = nullptr;
+	std::unique_ptr<Model> modelEnemyBody_ = nullptr;
+	std::unique_ptr<Model> modelEnemyL_arm_ = nullptr;
+	std::unique_ptr<Model> modelEnemyR_arm_ = nullptr;
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	std::unique_ptr<Model> modelGround_ = nullptr;
 	//*ワールドトランスフォームは各オブジェクトが各々持つもの
@@ -66,6 +70,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
+	//敵キャラ
+	std::unique_ptr<Enemy> enemy_ = nullptr;
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 	//デバッグカメラ

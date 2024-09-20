@@ -1,26 +1,37 @@
 #pragma once
+#include "BaseCharacter.h"
 #include "Input.h"
 #include "Model.h"
-#include "WorldTransform.h"
 #include "ViewProjection.h"
+#include "WorldTransform.h"
 
 /// <summary>
 /// 自キャラ
 /// </summary>
-class Player {
+class Player : public BaseCharacter {
+private:
+	enum PlayerParts {
+		kModelIndexPlayerBody,
+		kModelIndexPlayerHead,
+		kModelIndexPlayerL_arm,
+		kModelIndexPlayerR_arm,
+	};
+
 public:
+	Player(Input* input);
+	~Player() override;
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm, const Vector3& position, Input* input);
+	void Initialize(const std::vector<Model*>& models) override;
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update() override;
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection& viewProjection);
+	void Draw(const ViewProjection& viewProjection) override;
 
 	void InitializeFloatingGimmick();
 
@@ -41,7 +52,7 @@ private:
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
-	//カメラのビュープロジェクション
+	// カメラのビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
 	// モデル
 	Model* modelBody_ = nullptr;
@@ -52,8 +63,8 @@ private:
 	uint32_t textureHandle_ = 0u;
 
 private:
-	//目標角度
+	// 目標角度
 	float goalRadian = 0.0f;
-	//浮遊ギミックの媒介変数
+	// 浮遊ギミックの媒介変数
 	float floatingParameter_ = 0.0f;
 };

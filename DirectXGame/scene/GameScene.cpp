@@ -16,12 +16,19 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 3Dモデルの生成
 	model_.reset(Model::Create());
-	modelFighterBody_.reset(Model::CreateFromOBJ("player_Body", true));
-	modelFighterHead_.reset(Model::CreateFromOBJ("player_Head", true));
-	modelFighterL_arm_.reset(Model::CreateFromOBJ("player_L_arm", true));
-	modelFighterR_arm_.reset(Model::CreateFromOBJ("player_R_arm", true));
+	modelFighterBody_.reset(Model::CreateFromOBJ("float_Body", true));
+	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
+	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
+	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
+	modelEnemyBody_.reset(Model::CreateFromOBJ("needle_Body", true));
+	modelEnemyL_arm_.reset(Model::CreateFromOBJ("enemy_L_arm", true));
+	modelEnemyR_arm_.reset(Model::CreateFromOBJ("enemy_R_arm", true));
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
+	//自キャラモデル
+	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(), modelFighterR_arm_.get()};
+	//敵キャラモデル
+	std::vector<Model*> enemyModels = {modelEnemyBody_.get(), modelEnemyL_arm_.get(), modelEnemyR_arm_.get()};
 	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 3000;
 	viewProjection_.Initialize();
@@ -35,7 +42,9 @@ void GameScene::Initialize() {
 	//追従カメラの生成
 	followCamera_=std::make_unique<FollowCamera>();
 	// 自キャラの生成
-	player_ = std::make_unique<Player>();
+	player_ = std::make_unique<Player>(input_);
+	//敵キャラの生成
+	enemy_ = std::make_unique<Enemy>();
 	// 天球の生成
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の生成
@@ -47,7 +56,9 @@ void GameScene::Initialize() {
 	//追従カメラの初期化
 	followCamera_->Initialize(input_);
 	// 自キャラの初期化
-	player_->Initialize(modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(), modelFighterR_arm_.get(), {0.0f, 0.0f, 0.0f}, input_);
+	player_->Initialize(playerModels);
+	//敵キャラの初期化
+	enemy_->Initialize(enemyModels);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 天球の初期化
@@ -61,6 +72,8 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	// 自キャラの更新
 	player_->Update();
+	//敵キャラの更新
+	enemy_->Update();
 	// 天球の更新
 	skydome_->Update();
 	// 地面の更新
@@ -116,7 +129,8 @@ void GameScene::Draw() {
 
 	// 自キャラの描画
 	player_->Draw(viewProjection_);
-
+	//敵キャラの描画
+	enemy_->Draw(viewProjection_);
 	// 天球の描画
 	skydome_->Draw(viewProjection_);
 	// 地面の描画
