@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <optional>
 
 /// <summary>
 /// 自キャラ
@@ -15,7 +16,14 @@ private:
 		kModelIndexPlayerHead,
 		kModelIndexPlayerL_arm,
 		kModelIndexPlayerR_arm,
+		kModelIndexPlayerHammer,
 	};
+	//振る舞い
+	enum class Behavior {
+		kRoot,//通常状態
+		kAttack,//攻撃中
+	};
+
 
 public:
 	Player(Input* input);
@@ -37,6 +45,12 @@ public:
 
 	void UpdateFloatingGimmick();
 
+	void BehaviorRootInitialize();
+	void BehaviorRootUpdate();
+
+	void BehaviorAttackInitialize();
+	void BehaviorAttackUpdate();
+
 public:
 	const WorldTransform& GetWorldTransform() { return worldTransformBase_; }
 
@@ -52,13 +66,11 @@ private:
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
+	WorldTransform worldTransformHammer_;
 	// カメラのビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
 	// モデル
-	Model* modelBody_ = nullptr;
-	Model* modelHead_ = nullptr;
-	Model* modelL_arm_ = nullptr;
-	Model* modelR_arm_ = nullptr;
+	
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
@@ -67,4 +79,21 @@ private:
 	float goalRadian = 0.0f;
 	// 浮遊ギミックの媒介変数
 	float floatingParameter_ = 0.0f;
+	//振る舞い
+	Behavior behavior_ = Behavior::kRoot;
+	//次の振る舞いリクエスト
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	//ハンマー降り下ろし時間
+	const int kHammerDownTime_ = 15;
+	int hammerDownTimer_ = 0;
+	bool isHammerDown_ = false;
+	//ハンマー停止時間
+	const int kHammerStopTime_ = 40;
+	int hammerStopTimer_ = 0;
+	bool isHammerStop_ = false;
+	// ハンマー降り上げ時間
+	const int kHammerUpTime_ = 30;
+	int hammerUpTimer_ = 0;
+	bool isHammerUp_ = false;
 };

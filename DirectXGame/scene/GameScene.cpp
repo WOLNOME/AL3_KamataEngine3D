@@ -20,13 +20,14 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
+	modelFighterHammer_.reset(Model::CreateFromOBJ("hammer", true));
 	modelEnemyBody_.reset(Model::CreateFromOBJ("needle_Body", true));
 	modelEnemyL_arm_.reset(Model::CreateFromOBJ("enemy_L_arm", true));
 	modelEnemyR_arm_.reset(Model::CreateFromOBJ("enemy_R_arm", true));
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
 	//自キャラモデル
-	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(), modelFighterR_arm_.get()};
+	std::vector<Model*> playerModels = {modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(), modelFighterR_arm_.get(), modelFighterHammer_.get()};
 	//敵キャラモデル
 	std::vector<Model*> enemyModels = {modelEnemyBody_.get(), modelEnemyL_arm_.get(), modelEnemyR_arm_.get()};
 	// ビュープロジェクションの初期化
