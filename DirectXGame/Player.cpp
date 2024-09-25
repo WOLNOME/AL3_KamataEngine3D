@@ -36,6 +36,12 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformHammer_.parent_ = &worldTransformBody_;
 
 	InitializeFloatingGimmick();
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	globalVariables->SetValue(groupName, "Test", 90);
+
+
 }
 
 void Player::Update() {

@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "GlobalVariables.h"
 #include <optional>
 
 /// <summary>
