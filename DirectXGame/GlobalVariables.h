@@ -1,10 +1,15 @@
 #pragma once
 #include "Function.h"
+#include <json.hpp>
 #include <map>
 #include <string>
 #include <variant>
 
 class GlobalVariables {
+private:
+	//using
+	using json = nlohmann::json;
+
 public:
 	static GlobalVariables* GetInstance();
 
@@ -19,6 +24,7 @@ public:
 
 public:
 	void CreateGroup(const std::string& groupName);
+	void SaveFile(const std::string& groupName);
 
 	void SetValue(const std::string& groupName, const std::string& key, int32_t value);
 	void SetValue(const std::string& groupName, const std::string& key, float value);
@@ -37,4 +43,7 @@ private:
 
 	// 全データ
 	std::map<std::string, Group> datas_;
+	//グローバル変数の保存先ファイルパス
+	const std::string kDirectryPath = "Resources/GlobalVariables/";
+
 };
