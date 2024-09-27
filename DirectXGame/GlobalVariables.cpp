@@ -128,6 +128,14 @@ void GlobalVariables::SaveFile(const std::string& groupName) {
 
 }
 
+void GlobalVariables::LoadFiles() {
+	//保存先のディレクトリのパスをローカルで宣言
+	std::filesystem::path dir(kDirectryPath);
+	//ディレクトリが無ければスキップ
+
+
+}
+
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, int32_t value) {
 	// グループの参照を取得
 	Group& group = datas_[groupName];

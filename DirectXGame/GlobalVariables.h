@@ -25,6 +25,8 @@ public:
 public:
 	void CreateGroup(const std::string& groupName);
 	void SaveFile(const std::string& groupName);
+	void LoadFiles();
+	void LoadFile(const std::string& groupName);
 
 	void SetValue(const std::string& groupName, const std::string& key, int32_t value);
 	void SetValue(const std::string& groupName, const std::string& key, float value);
