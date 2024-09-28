@@ -52,6 +52,10 @@ public:
 	void BehaviorAttackInitialize();
 	void BehaviorAttackUpdate();
 
+private:
+	//調整項目の適用
+	void ApplyGlobalVariables();
+
 public:
 	const WorldTransform& GetWorldTransform() { return worldTransformBase_; }
 
