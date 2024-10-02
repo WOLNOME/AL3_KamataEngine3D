@@ -1,6 +1,6 @@
 #include "RailCamera.h"
 #include "Function.h"
-#include <imgui.h>
+#include "ImGuiManager.h"
 
 void RailCamera::Initialize(const Vector3& position, const Vector3& radian) {
 	// ワールドトランスフォームの初期設定
@@ -24,8 +24,10 @@ void RailCamera::Update() {
 	viewProjection_.matView = Inverse(worldTransForm_.matWorld_);
 
 	// カメラの座標を画面表示する処理
+#ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::DragFloat3("translation", &worldTransForm_.translation_.x, 0.01f);
 	ImGui::DragFloat3("rotation", &worldTransForm_.rotation_.x, 0.01f);
 	ImGui::End();
+#endif // _DEBUG
 }

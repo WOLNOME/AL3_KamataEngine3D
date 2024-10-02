@@ -1,12 +1,10 @@
 #include "Player.h"
 #include "Function.h"
-#include "ImGuiManager.h"
 #include "GameScene.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
-Player::~Player() {
-	
-}
+Player::~Player() {}
 
 void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& position) {
 	// NULLポインタチェック
@@ -20,7 +18,6 @@ void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& pos
 }
 
 void Player::Update() {
-	
 
 	/// 旋回処理
 	// 回転速さ
@@ -70,10 +67,11 @@ void Player::Update() {
 	// 攻撃処理
 	Attack();
 
-	//行列の更新
+	// 行列の更新
 	worldTransform_.UpdateMatrix();
 
 	// キャラクターの座標を画面表示する処理
+#ifdef _DEBUG
 	//  デバッグテキストの表示
 	ImGui::Begin(" ");
 	// float3スライダー
@@ -88,24 +86,21 @@ void Player::Update() {
 	worldTransform_.translation_.y = inputFloat3[1];
 	worldTransform_.translation_.z = inputFloat3[2];
 	ImGui::End();
+#endif // _DEBUG
 }
 
-void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	
-}
+void Player::Draw(ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection, textureHandle_); }
 
 void Player::Attack() {
 	// 弾発射
 	if (input_->TriggerKey(DIK_SPACE)) {
 
-		//弾の速度
+		// 弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
-		//速度ベクトルを自機の向きに合わせて回転させる
-		velocity = TransformNormal(velocity,worldTransform_.matWorld_);
+		// 速度ベクトルを自機の向きに合わせて回転させる
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -113,7 +108,6 @@ void Player::Attack() {
 
 		// 弾を登録する
 		gameScene_->AddPlayerBullet(newBullet);
-
 	}
 }
 
@@ -121,14 +115,14 @@ void Player::OnCollision() {}
 
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;
-	//ワールド行列の平行移動成分を取得
+	// ワールド行列の平行移動成分を取得
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
-	return worldPos; 
+	return worldPos;
 }
 
 void Player::SetParent(const WorldTransform* parent) {
-	//親子関係を結ぶ
-	worldTransform_.parent_=parent;
+	// 親子関係を結ぶ
+	worldTransform_.parent_ = parent;
 }
