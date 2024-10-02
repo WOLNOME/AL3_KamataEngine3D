@@ -126,6 +126,9 @@ void Player::BehaviorRootUpdate() {
 		if (padInput.Gamepad.wButtons == XINPUT_GAMEPAD_A&&prePadInput.Gamepad.wButtons!=XINPUT_GAMEPAD_A) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
+		//ジャンプ
+		if (padInput)
+
 		// しきい値設定
 		const float threshold = 0.7f;
 		bool isMoving = false;
@@ -229,6 +232,13 @@ void Player::BehaviorAttackUpdate() {
 			behaviorRequest_ = Behavior::kRoot;
 		}
 	}
+}
+
+void Player::BehaviorJumpInitialize() {}
+
+void Player::BehaviorJumpUpdate() {
+
+
 }
 
 void Player::ApplyGlobalVariables() {

@@ -23,6 +23,7 @@ private:
 	enum class Behavior {
 		kRoot,//通常状態
 		kAttack,//攻撃中
+		kJump,//ジャンプ中
 	};
 
 
@@ -51,6 +52,10 @@ public:
 
 	void BehaviorAttackInitialize();
 	void BehaviorAttackUpdate();
+
+	void BehaviorJumpInitialize();
+	void BehaviorJumpUpdate();
+
 
 private:
 	//調整項目の適用
